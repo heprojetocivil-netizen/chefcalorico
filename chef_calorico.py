@@ -1431,7 +1431,7 @@ elif st.session_state.etapa == "App":
                         for r in refs_sel
                     )
                     prompt = (
-                        f"Monte um plano alimentar completo e detalhado.\n\n"
+                        f"Monte um plano alimentar completo e detalhado no formato abaixo.\n\n"
                         f"META: {kcal} kcal/dia | Objetivo: {obj}\n"
                         f"Culinária: {est}\n"
                         f"Não gosta: {nao_gosta or 'nenhum'}\n"
@@ -1440,16 +1440,33 @@ elif st.session_state.etapa == "App":
                         f"Disponível em casa: {disponivel or 'não informado'}\n"
                         f"Orçamento: {orcamento or 'não informado'}\n\n"
                         f"DISTRIBUIÇÃO CALÓRICA (respeite EXATAMENTE cada valor):\n{refeicoes_desc}\n\n"
-                        f"Para CADA refeição:\n"
+                        f"=== FORMATO OBRIGATÓRIO ===\n\n"
+                        f"🌸 Plano Alimentar — {est}\n\n"
+                        f"| Refeição | Prato | Calorias | Proteína | Carboidratos | Gorduras |\n"
+                        f"|---|---|---|---|---|---|\n"
+                        f"[Uma linha por refeição com os valores reais]\n"
+                        f"| 📊 TOTAL | — | [X] kcal | [X] g | [X] g | [X] g |\n\n"
+                        f"---\n\n"
+                        f"Depois, para CADA refeição use este bloco:\n\n"
                         f"[EMOJI] [NOME DA REFEIÇÃO] — [X] kcal\n"
-                        f"[Descrição do prato com ingredientes específicos]\n"
-                        f"🔥 [X] kcal · 💪 [X]g prot · 🍞 [X]g carbo · 🥑 [X]g gord\n"
-                        f"👨‍🍳 Preparo rápido: [como preparar]\n\n"
-                        f"[Repita para todas as {len(refs_sel)} refeições]\n\n"
-                        f"📊 TOTAL DO DIA:\n"
-                        f"🔥 [X] kcal (meta: {kcal}) — {'✅ dentro da meta' if True else '⚠️'}\n"
-                        f"💪 Proteína: [X]g · 🍞 Carbo: [X]g · 🥑 Gordura: [X]g\n\n"
-                        f"💡 DICA PARA O OBJETIVO '{obj}':\n[orientação personalizada]"
+                        f"[Nome do prato]\n\n"
+                        f"| Ingrediente | Quantidade |\n"
+                        f"|---|---|\n"
+                        f"| [ingrediente] | [quantidade] |\n"
+                        f"[liste todos os ingredientes]\n\n"
+                        f"👨‍🍳 Preparo: [passo a passo em 2-4 linhas]\n\n"
+                        f"---\n\n"
+                        f"[Repita o bloco para todas as {len(refs_sel)} refeições]\n\n"
+                        f"Por último:\n\n"
+                        f"📊 Resumo nutricional do dia\n\n"
+                        f"| Meta | Resultado |\n"
+                        f"|---|---|\n"
+                        f"| 🔥 Calorias | [X] kcal |\n"
+                        f"| 💪 Proteínas | [X] g |\n"
+                        f"| 🍞 Carboidratos | [X] g |\n"
+                        f"| 🥑 Gorduras | [X] g |\n"
+                        f"| 🎯 Meta calórica | {kcal} kcal |\n"
+                        f"| ✅ Status | [Dentro da meta / Acima da meta / Abaixo da meta] |"
                     )
                     res = nutri_ia(prompt)
                     salvar_receita("Plano Calórico", f"{kcal} kcal — {obj}", res)
@@ -1459,7 +1476,13 @@ elif st.session_state.etapa == "App":
                 st.warning("Selecione pelo menos uma refeição e defina a distribuição.")
 
         if st.session_state.get('dist_resultado'):
-            st.markdown(f"<div class='card'>{st.session_state['dist_resultado']}</div>", unsafe_allow_html=True)
+            # Container estilizado mas usando st.markdown nativo para tabelas renderizarem
+            st.markdown("""
+            <div style='background:linear-gradient(135deg,#FFF7ED,#FFEDD5);
+            border:2px solid #FDBA74;border-radius:16px;padding:4px 16px;margin-bottom:12px;'>
+            </div>
+            """, unsafe_allow_html=True)
+            st.markdown(st.session_state['dist_resultado'])
             col_dl, col_sv = st.columns(2)
             with col_dl:
                 st.download_button("📋 Baixar plano (.txt)", data=st.session_state['dist_resultado'],
