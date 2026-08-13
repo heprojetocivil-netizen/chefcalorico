@@ -36,22 +36,22 @@ st.markdown("""
 
     .stApp h1, .stApp h2, .stApp h3 { font-family: 'Playfair Display', serif !important; color: #1A1A2E !important; }
 
-    .card { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); padding:22px; border-radius:16px; border:1px solid #FDBA74; margin-bottom:15px; white-space:pre-wrap; box-shadow:0 2px 12px rgba(234,88,12,0.08); }
+    .card { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); padding:22px; border-radius:16px; border:1px solid #FDBA74; margin-bottom:15px; white-space:normal; word-wrap:break-word; box-shadow:0 2px 12px rgba(234,88,12,0.08); }
     .stApp .card, .stApp .card p, .stApp .card span, .stApp .card div, .stApp .card strong, .stApp .card em { color:#1A1A2E !important; }
 
-    .card-dark { background:linear-gradient(135deg,#1C0A00,#2D1500); padding:22px; border-radius:16px; border:1px solid #EA580C; margin-bottom:15px; white-space:pre-wrap; }
+    .card-dark { background:linear-gradient(135deg,#1C0A00,#2D1500); padding:22px; border-radius:16px; border:1px solid #EA580C; margin-bottom:15px; white-space:normal; word-wrap:break-word; }
     .stApp .card-dark, .stApp .card-dark p, .stApp .card-dark span, .stApp .card-dark div, .stApp .card-dark strong { color:#FED7AA !important; }
 
-    .card-green { background:linear-gradient(135deg,#F0FDF4,#DCFCE7); padding:22px; border-radius:16px; border:1px solid #86EFAC; margin-bottom:15px; white-space:pre-wrap; }
+    .card-green { background:linear-gradient(135deg,#F0FDF4,#DCFCE7); padding:22px; border-radius:16px; border:1px solid #86EFAC; margin-bottom:15px; white-space:normal; word-wrap:break-word; }
     .stApp .card-green, .stApp .card-green p, .stApp .card-green span, .stApp .card-green div, .stApp .card-green strong { color:#14532D !important; }
 
-    .card-blue { background:linear-gradient(135deg,#EFF6FF,#DBEAFE); padding:22px; border-radius:16px; border:1px solid #93C5FD; margin-bottom:15px; white-space:pre-wrap; }
+    .card-blue { background:linear-gradient(135deg,#EFF6FF,#DBEAFE); padding:22px; border-radius:16px; border:1px solid #93C5FD; margin-bottom:15px; white-space:normal; word-wrap:break-word; }
     .stApp .card-blue, .stApp .card-blue p, .stApp .card-blue span, .stApp .card-blue div { color:#1E3A8A !important; }
 
-    .card-purple { background:linear-gradient(135deg,#F5F3FF,#EDE9FE); padding:22px; border-radius:16px; border:1px solid #C4B5FD; margin-bottom:15px; white-space:pre-wrap; }
+    .card-purple { background:linear-gradient(135deg,#F5F3FF,#EDE9FE); padding:22px; border-radius:16px; border:1px solid #C4B5FD; margin-bottom:15px; white-space:normal; word-wrap:break-word; }
     .stApp .card-purple, .stApp .card-purple p, .stApp .card-purple span, .stApp .card-purple div { color:#4C1D95 !important; }
 
-    .card-red { background:linear-gradient(135deg,#FFF5F5,#FEE2E2); padding:22px; border-radius:16px; border:1px solid #FECACA; margin-bottom:15px; white-space:pre-wrap; }
+    .card-red { background:linear-gradient(135deg,#FFF5F5,#FEE2E2); padding:22px; border-radius:16px; border:1px solid #FECACA; margin-bottom:15px; white-space:normal; word-wrap:break-word; }
     .stApp .card-red, .stApp .card-red p, .stApp .card-red span, .stApp .card-red div { color:#7F1D1D !important; }
 
     .painel-nutri { background:linear-gradient(135deg,#1A1A2E,#0F0A00); border:2px solid #F97316; border-radius:20px; padding:24px; margin-bottom:20px; }
@@ -60,6 +60,7 @@ st.markdown("""
 
     .meta-box { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); border:2px solid #F97316; border-radius:16px; padding:20px; text-align:center; margin-bottom:12px; }
     .stApp .meta-box, .stApp .meta-box p, .stApp .meta-box span, .stApp .meta-box div { color:#C2410C !important; }
+    .stApp .meta-numero { color:#EA580C !important; }
     .meta-numero { font-size:2.2em; font-weight:700; font-family:'Playfair Display',serif; color:#EA580C !important; }
 
     .stat-box { background:#FFF7ED; border-radius:12px; padding:18px; text-align:center; border:1px solid #FDBA74; }
@@ -349,13 +350,15 @@ elif st.session_state.etapa == "App":
             st.session_state.pagina = pg; st.rerun()
 
     # NAVBAR linha 2
-    cols2 = st.columns(9)
+    cols2 = st.columns(11)
     nav2 = [("💬","Nutricionista"),("🏃","Fitness"),("🏆","Desafios"),("🎖️","Conquistas"),
-            ("📷","FotoPrato"),("🏪","Restaurante"),("🧠","IAPreventiva"),("📖","Historico"),("❤️2","Salvos")]
+            ("📷","FotoPrato"),("🏪","Restaurante"),("🧠","IAPreventiva"),("📖","Historico"),("❤️2","Salvos"),
+            ("🧮","Distribuicao"),("🥗","NutricaoInt")]
     lb2 = {"Nutricionista":"Nutricionista IA","Fitness":"Área Fitness","Desafios":"Desafios Nutricionais",
            "Conquistas":"Minhas Conquistas","FotoPrato":"Analisar Foto do Prato",
            "Restaurante":"Assistente de Restaurante","IAPreventiva":"IA Preventiva e Coach",
-           "Historico":"Histórico de Cardápios","Salvos":"Receitas Salvas"}
+           "Historico":"Histórico de Cardápios","Salvos":"Receitas Salvas",
+           "Distribuicao":"Distribuição Calórica Inteligente","NutricaoInt":"Nutrição Inteligente"}
     for i,(ic,pg) in enumerate(nav2):
         ch = list(lb2.keys())[i]
         if cols2[i].button(ic, key=f"nav2_{ch}", help=lb2[ch]):
@@ -1258,6 +1261,380 @@ elif st.session_state.etapa == "App":
                         if st.button("🗑️", key=f"del_salvo_{i}"):
                             st.session_state.receitas_salvas.pop(idx_real)
                             st.rerun()
+
+    # ──────────────────────────────────────────
+    # DISTRIBUIÇÃO CALÓRICA INTELIGENTE
+    # ──────────────────────────────────────────
+    elif st.session_state.pagina == "Distribuicao":
+        st.header("🧮 Distribuição Calórica Inteligente")
+        st.markdown("Monte seu plano alimentar controlando exatamente quantas calorias em cada refeição.")
+
+        # Defaults
+        for k,v in [('dist_kcal',1500),('dist_obj','Emagrecer'),('dist_refeicoes',
+            ['☕ Café da manhã','🍽️ Almoço','🌙 Jantar']),
+            ('dist_estilo','Brasileira'),('dist_nao_gosta',''),('dist_nao_pode',''),
+            ('dist_alergias',''),('dist_disponivel',''),('dist_orcamento',''),
+            ('dist_pcts',{}),('dist_modo','auto'),('dist_resultado',None)]:
+            if k not in st.session_state: st.session_state[k] = v
+
+        # ── ETAPA 1: META ──
+        st.markdown("### 1️⃣ Meta Diária")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            kcal = st.number_input("🔥 Calorias por dia:", min_value=800, max_value=5000,
+                value=st.session_state.dist_kcal, step=50)
+            st.session_state.dist_kcal = kcal
+        with col2:
+            obj = st.selectbox("🎯 Objetivo:", ["Emagrecer","Manter peso","Ganhar massa","Melhorar alimentação"],
+                index=["Emagrecer","Manter peso","Ganhar massa","Melhorar alimentação"].index(st.session_state.dist_obj))
+            st.session_state.dist_obj = obj
+        with col3:
+            todas_ref = ["☕ Café da manhã","🍎 Lanche da manhã","🍽️ Almoço",
+                         "🥪 Lanche da tarde","🌙 Jantar","🌙 Ceia"]
+            refs_sel = st.multiselect("🍴 Refeições do dia:", todas_ref,
+                default=st.session_state.dist_refeicoes)
+            st.session_state.dist_refeicoes = refs_sel
+
+        # ── ETAPA 2: MODO ──
+        st.markdown("### 2️⃣ Como distribuir as calorias?")
+        modo = st.radio("", ["⚡ Automático — a IA distribui pelo objetivo","🎯 Manual — eu controlo cada refeição"],
+            horizontal=True, key="dist_modo_radio")
+        st.session_state.dist_modo = "auto" if "Automático" in modo else "manual"
+
+        if refs_sel:
+            # Distribuição padrão por objetivo
+            pcts_padrao = {
+                "Emagrecer":        {"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":35,"🥪 Lanche da tarde":10,"🌙 Jantar":20,"🌙 Ceia":5},
+                "Ganhar massa":     {"☕ Café da manhã":25,"🍎 Lanche da manhã":15,"🍽️ Almoço":30,"🥪 Lanche da tarde":15,"🌙 Jantar":25,"🌙 Ceia":10},
+                "Manter peso":      {"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":30,"🥪 Lanche da tarde":10,"🌙 Jantar":25,"🌙 Ceia":5},
+                "Melhorar alimentação": {"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":30,"🥪 Lanche da tarde":10,"🌙 Jantar":25,"🌙 Ceia":5},
+            }
+
+            pcts_base = pcts_padrao.get(obj, pcts_padrao["Manter peso"])
+
+            if st.session_state.dist_modo == "auto":
+                # Distribui automaticamente proporcionalmente às refeições selecionadas
+                pcts_sel = {r: pcts_base.get(r, 15) for r in refs_sel}
+                total_base = sum(pcts_sel.values())
+                pcts_norm = {r: round(v/total_base*100) for r,v in pcts_sel.items()}
+                # Ajuste para somar 100%
+                diff = 100 - sum(pcts_norm.values())
+                if diff != 0 and pcts_norm:
+                    maior = max(pcts_norm, key=pcts_norm.get)
+                    pcts_norm[maior] += diff
+
+                st.markdown("### ⚖️ Distribuição Automática")
+                st.markdown(f"*Baseada no objetivo: **{obj}***")
+
+                dados_tabela = []
+                for ref in refs_sel:
+                    pct = pcts_norm.get(ref, 0)
+                    cal = round(kcal * pct / 100)
+                    dados_tabela.append((ref, pct, cal))
+
+                # Tabela visual
+                st.markdown("""
+                <div style='background:#FFFFFF;border:1px solid #FDBA74;border-radius:12px;overflow:hidden;margin-bottom:16px;'>
+                <table style='width:100%;border-collapse:collapse;'>
+                <tr style='background:#FFF7ED;'>
+                    <th style='padding:10px 14px;text-align:left;color:#C2410C;font-size:0.88em;'>Refeição</th>
+                    <th style='padding:10px 14px;text-align:center;color:#C2410C;font-size:0.88em;'>%</th>
+                    <th style='padding:10px 14px;text-align:center;color:#C2410C;font-size:0.88em;'>Calorias</th>
+                    <th style='padding:10px 14px;text-align:left;color:#C2410C;font-size:0.88em;'>Barra</th>
+                </tr>
+                """, unsafe_allow_html=True)
+
+                for ref, pct, cal in dados_tabela:
+                    st.markdown(
+                        f"<tr style='border-top:1px solid #FEF3C7;'>"
+                        f"<td style='padding:10px 14px;color:#1A1A2E;font-weight:600;'>{ref}</td>"
+                        f"<td style='padding:10px 14px;text-align:center;color:#EA580C;font-weight:700;'>{pct}%</td>"
+                        f"<td style='padding:10px 14px;text-align:center;color:#1A1A2E;font-weight:600;'>{cal} kcal</td>"
+                        f"<td style='padding:10px 14px;'><div style='background:#FEF3C7;border-radius:999px;height:8px;'>"
+                        f"<div style='background:#EA580C;border-radius:999px;height:100%;width:{pct}%;'></div>"
+                        f"</div></td></tr>",
+                        unsafe_allow_html=True
+                    )
+
+                total_pct = sum(p for _,p,_ in dados_tabela)
+                total_cal = sum(c for _,_,c in dados_tabela)
+                cor_tot = "#059669" if total_pct == 100 else "#B91C1C"
+                st.markdown(
+                    f"<tr style='background:#FFF7ED;font-weight:700;'>"
+                    f"<td style='padding:10px 14px;color:#1A1A2E;'>TOTAL</td>"
+                    f"<td style='padding:10px 14px;text-align:center;color:{cor_tot};'>{total_pct}%</td>"
+                    f"<td style='padding:10px 14px;text-align:center;color:{cor_tot};'>{total_cal} kcal</td>"
+                    f"<td style='padding:10px 14px;color:{cor_tot};'>{'✅' if total_pct==100 else '⚠️'}</td></tr>"
+                    f"</table></div>",
+                    unsafe_allow_html=True
+                )
+                st.session_state.dist_pcts = {r:p for r,p,_ in dados_tabela}
+
+            else:
+                # MODO MANUAL — sliders
+                st.markdown("### ⚖️ Controle Manual")
+                pcts_atual = st.session_state.dist_pcts or {r: round(100/len(refs_sel)) for r in refs_sel}
+                novos_pcts = {}
+                total_atual = 0
+
+                for ref in refs_sel:
+                    val_atual = pcts_atual.get(ref, round(100/len(refs_sel)))
+                    novo = st.slider(f"{ref}:", 0, 100, val_atual, key=f"slider_{ref}")
+                    novos_pcts[ref] = novo
+                    cal_ref = round(kcal * novo / 100)
+                    st.markdown(f"<small style='color:#EA580C;font-weight:600;'>{cal_ref} kcal</small>", unsafe_allow_html=True)
+                    total_atual += novo
+
+                # Validação
+                st.session_state.dist_pcts = novos_pcts
+                diff = 100 - total_atual
+                if diff == 0:
+                    st.markdown("<div class='card-green' style='padding:10px 14px;'>✅ Total distribuído: 100% = {} kcal</div>".format(kcal), unsafe_allow_html=True)
+                elif diff > 0:
+                    st.markdown(f"<div class='card-yellow' style='padding:10px 14px;'>⚠️ Ainda faltam <strong>{diff}%</strong> ({round(kcal*diff/100)} kcal) para completar sua meta.</div>", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"<div class='card-red' style='padding:10px 14px;'>⚠️ Você ultrapassou em <strong>{abs(diff)}%</strong> ({round(kcal*abs(diff)/100)} kcal).</div>", unsafe_allow_html=True)
+
+        # ── ETAPA 3: ESTILO ──
+        st.markdown("### 3️⃣ Estilo de Alimentação")
+        estilos = ["🇧🇷 Brasileira","🌵 Nordestina","🇮🇹 Italiana","🇯🇵 Japonesa","🇲🇽 Mexicana",
+                   "🥗 Saudável","🍖 Carnívora","🌱 Vegetariana","✨ Personalizada"]
+        est = st.selectbox("Culinária preferida:", estilos)
+        st.session_state.dist_estilo = est
+
+        # ── ETAPA 4: RESTRIÇÕES ──
+        st.markdown("### 4️⃣ Preferências e Restrições")
+        col_a, col_b = st.columns(2)
+        with col_a:
+            nao_gosta = st.text_area("🚫 Alimentos que não gosta:", value=st.session_state.dist_nao_gosta, height=80, placeholder="ex: brócolis, fígado...")
+            nao_pode  = st.text_area("🚫 Alimentos que não pode consumir:", value=st.session_state.dist_nao_pode, height=80, placeholder="ex: carne vermelha, frutos do mar...")
+            alergias  = st.text_area("⚠️ Alergias / intolerâncias:", value=st.session_state.dist_alergias, height=80, placeholder="ex: lactose, glúten...")
+        with col_b:
+            disponivel = st.text_area("🏠 Alimentos disponíveis em casa:", value=st.session_state.dist_disponivel, height=80, placeholder="ex: frango, arroz, feijão, ovos...")
+            orcamento  = st.text_input("💰 Orçamento para alimentação:", value=st.session_state.dist_orcamento, placeholder="ex: R$300/mês, barato, sem limite...")
+
+        st.session_state.dist_nao_gosta  = nao_gosta
+        st.session_state.dist_nao_pode   = nao_pode
+        st.session_state.dist_alergias   = alergias
+        st.session_state.dist_disponivel = disponivel
+        st.session_state.dist_orcamento  = orcamento
+
+        # ── ETAPA 5: GERAR ──
+        st.markdown("### 5️⃣ Criar Meu Plano Alimentar")
+        if st.button("🤖 CRIAR MEU PLANO ALIMENTAR PERSONALIZADO", use_container_width=True):
+            if refs_sel and st.session_state.dist_pcts:
+                with st.spinner("A IA está montando seu plano..."):
+                    # Monta descrição das refeições com calorias
+                    pcts_finais = st.session_state.dist_pcts
+                    refeicoes_desc = "\n".join(
+                        f"- {r}: {round(kcal * pcts_finais.get(r,0) / 100)} kcal ({pcts_finais.get(r,0)}%)"
+                        for r in refs_sel
+                    )
+                    prompt = (
+                        f"Monte um plano alimentar completo e detalhado.\n\n"
+                        f"META: {kcal} kcal/dia | Objetivo: {obj}\n"
+                        f"Culinária: {est}\n"
+                        f"Não gosta: {nao_gosta or 'nenhum'}\n"
+                        f"Não pode: {nao_pode or 'nenhum'}\n"
+                        f"Alergias: {alergias or 'nenhuma'}\n"
+                        f"Disponível em casa: {disponivel or 'não informado'}\n"
+                        f"Orçamento: {orcamento or 'não informado'}\n\n"
+                        f"DISTRIBUIÇÃO CALÓRICA (respeite EXATAMENTE cada valor):\n{refeicoes_desc}\n\n"
+                        f"Para CADA refeição:\n"
+                        f"[EMOJI] [NOME DA REFEIÇÃO] — [X] kcal\n"
+                        f"[Descrição do prato com ingredientes específicos]\n"
+                        f"🔥 [X] kcal · 💪 [X]g prot · 🍞 [X]g carbo · 🥑 [X]g gord\n"
+                        f"👨‍🍳 Preparo rápido: [como preparar]\n\n"
+                        f"[Repita para todas as {len(refs_sel)} refeições]\n\n"
+                        f"📊 TOTAL DO DIA:\n"
+                        f"🔥 [X] kcal (meta: {kcal}) — {'✅ dentro da meta' if True else '⚠️'}\n"
+                        f"💪 Proteína: [X]g · 🍞 Carbo: [X]g · 🥑 Gordura: [X]g\n\n"
+                        f"💡 DICA PARA O OBJETIVO '{obj}':\n[orientação personalizada]"
+                    )
+                    res = nutri_ia(prompt)
+                    salvar_receita("Plano Calórico", f"{kcal} kcal — {obj}", res)
+                    st.session_state.xp_total += 20
+                    st.session_state['dist_resultado'] = res
+            else:
+                st.warning("Selecione pelo menos uma refeição e defina a distribuição.")
+
+        if st.session_state.get('dist_resultado'):
+            st.markdown(f"<div class='card'>{st.session_state['dist_resultado']}</div>", unsafe_allow_html=True)
+            col_dl, col_sv = st.columns(2)
+            with col_dl:
+                st.download_button("📋 Baixar plano (.txt)", data=st.session_state['dist_resultado'],
+                    file_name="plano_calorico.txt", mime="text/plain", use_container_width=True)
+            with col_sv:
+                if st.button("❤️ Salvar", key="sv_dist", use_container_width=True):
+                    st.session_state.receitas_salvas.append({'tipo':'Plano Calórico',
+                        'nome':f"{kcal} kcal — {obj}",'conteudo':st.session_state['dist_resultado'],
+                        'data':datetime.now().strftime('%d/%m %H:%M'),'favorito':False})
+                    st.success("❤️ Salvo!")
+
+    # ──────────────────────────────────────────
+    # NUTRIÇÃO INTELIGENTE
+    # ──────────────────────────────────────────
+    elif st.session_state.pagina == "NutricaoInt":
+        st.header("🥗 Nutrição Inteligente")
+        st.markdown("Análise nutricional profunda, carências, suplementação e recomendações personalizadas.")
+
+        tab_analise, tab_carencias, tab_supl, tab_hidra = st.tabs([
+            "🔬 Analisar Minha Dieta","⚠️ Carências Nutricionais","💊 Suplementação","💧 Hidratação"
+        ])
+
+        with tab_analise:
+            st.markdown("### 🔬 Análise Nutricional Completa")
+            dieta_desc = st.text_area("Descreva o que você costuma comer num dia típico:", height=180,
+                placeholder="Ex: Café: pão com manteiga e café com leite. Almoço: arroz, feijão, frango e salada. Lanche: fruta. Jantar: sopa...")
+            col1, col2 = st.columns(2)
+            with col1:
+                peso_n = st.number_input("⚖️ Peso (kg):", value=float(st.session_state.get('peso_atual',70) or 70), step=0.5)
+                objetivo_n = st.selectbox("🎯 Objetivo:", ["Emagrecer","Ganhar massa","Manutenção","Saúde geral","Performance"])
+            with col2:
+                idade_n = st.number_input("🎂 Idade:", value=int(st.session_state.get('idade',30)), step=1)
+                atividade_n = st.selectbox("🏃 Atividade:", ["Sedentário","Levemente ativo","Moderado","Muito ativo","Atleta"])
+
+            if st.button("🔬 ANALISAR MINHA DIETA"):
+                if dieta_desc.strip():
+                    with st.spinner("Analisando nutricionalmente..."):
+                        prompt = (
+                            f"Faça uma análise nutricional completa da dieta descrita.\n"
+                            f"Dieta: {dieta_desc}\n"
+                            f"Peso: {peso_n}kg. Idade: {idade_n}. Objetivo: {objetivo_n}. Atividade: {atividade_n}.\n\n"
+                            f"FORMATO:\n\n"
+                            f"🔬 ANÁLISE NUTRICIONAL COMPLETA\n\n"
+                            f"📊 ESTIMATIVA DE MACROS DIÁRIOS:\n"
+                            f"🔥 Calorias: ~[X] kcal (necessidade estimada: [X] kcal)\n"
+                            f"💪 Proteína: ~[X]g (recomendado: [X]g)\n"
+                            f"🍞 Carboidratos: ~[X]g (recomendado: [X]g)\n"
+                            f"🥑 Gorduras: ~[X]g (recomendado: [X]g)\n"
+                            f"🌾 Fibras: ~[X]g (recomendado: 25-35g)\n\n"
+                            f"✅ O QUE ESTÁ BOM:\n[pontos positivos da dieta]\n\n"
+                            f"⚠️ O QUE PRECISA MELHORAR:\n[deficiências e problemas]\n\n"
+                            f"🎯 ADEQUAÇÃO AO OBJETIVO '{objetivo_n}':\n[análise específica]\n\n"
+                            f"💡 3 MUDANÇAS SIMPLES QUE FARIAM GRANDE DIFERENÇA:\n[sugestões práticas e realistas]"
+                        )
+                        res = nutri_ia(prompt)
+                        salvar_receita("Análise Nutricional", "Dieta do dia", res)
+                        st.session_state['nutrint_analise'] = res
+                else:
+                    st.warning("Descreva sua dieta antes de analisar.")
+
+            if st.session_state.get('nutrint_analise'):
+                st.markdown(f"<div class='card'>{st.session_state['nutrint_analise']}</div>", unsafe_allow_html=True)
+
+        with tab_carencias:
+            st.markdown("### ⚠️ Identificar Carências Nutricionais")
+            st.markdown("*Descreva seus sintomas e a IA identifica possíveis deficiências.*")
+            sintomas = st.text_area("🩺 Seus sintomas ou queixas:", height=120,
+                placeholder="ex: cansaço frequente, queda de cabelo, unhas fracas, dificuldade de concentração, cãibras...")
+            dieta_car = st.text_area("🍽️ O que você costuma comer:", height=100,
+                placeholder="ex: pouca carne vermelha, não como peixe, vegetariano...")
+
+            if st.button("⚠️ IDENTIFICAR POSSÍVEIS CARÊNCIAS"):
+                if sintomas.strip():
+                    with st.spinner("Analisando..."):
+                        prompt = (
+                            f"Com base nos sintomas e dieta, identifique possíveis carências nutricionais.\n"
+                            f"Sintomas: {sintomas}\nDieta: {dieta_car or 'não informada'}\n\n"
+                            f"FORMATO:\n\n"
+                            f"⚠️ POSSÍVEIS CARÊNCIAS IDENTIFICADAS\n\n"
+                            f"⚠️ IMPORTANTE: Esta análise é educacional e não substitui avaliação médica.\n\n"
+                            f"Para cada carência suspeita:\n\n"
+                            f"🔴 [NUTRIENTE]\n"
+                            f"Sintomas compatíveis: [quais sintomas relatados]\n"
+                            f"Fontes alimentares: [alimentos ricos nesse nutriente]\n"
+                            f"Como incluir na dieta: [sugestão prática]\n"
+                            f"Quando buscar médico: [sinais de alerta]\n\n"
+                            f"[Repita para cada carência]\n\n"
+                            f"🥗 ALIMENTOS PARA INCLUIR NA ROTINA:\n[lista com os mais importantes]\n\n"
+                            f"⚕️ RECOMENDAÇÃO: Consulte um nutricionista ou médico para exames e diagnóstico preciso."
+                        )
+                        res = nutri_ia(prompt)
+                        salvar_receita("Carências", sintomas[:60], res)
+                        st.session_state['nutrint_carencias'] = res
+                else:
+                    st.warning("Descreva seus sintomas.")
+
+            if st.session_state.get('nutrint_carencias'):
+                st.markdown(f"<div class='card-yellow'>{st.session_state['nutrint_carencias']}</div>", unsafe_allow_html=True)
+
+        with tab_supl:
+            st.markdown("### 💊 Guia de Suplementação")
+            obj_supl = st.selectbox("Objetivo:", ["Emagrecer","Ganhar massa muscular","Energia e disposição","Saúde geral","Performance esportiva","Sono e recuperação"])
+            nivel_supl = st.selectbox("Nível de atividade:", ["Sedentário","Praticante casual","Praticante regular","Atleta"])
+            restricoes_supl = st.text_input("Restrições (alergias, medicamentos):", placeholder="ex: lactose, anticoagulante...")
+
+            if st.button("💊 GERAR GUIA DE SUPLEMENTAÇÃO"):
+                with st.spinner("Analisando..."):
+                    prompt = (
+                        f"Crie um guia de suplementação para:\nObjetivo: {obj_supl}\nNível: {nivel_supl}\nRestrições: {restricoes_supl or 'nenhuma'}\n\n"
+                        f"FORMATO:\n\n"
+                        f"💊 GUIA DE SUPLEMENTAÇÃO — {obj_supl.upper()}\n\n"
+                        f"⚠️ AVISO: Consulte um profissional de saúde antes de iniciar suplementação.\n\n"
+                        f"✅ SUPLEMENTOS RECOMENDADOS:\n\n"
+                        f"Para cada suplemento:\n"
+                        f"[Nome] — [benefício principal]\n"
+                        f"• Quando tomar: [horário e momento]\n"
+                        f"• Dosagem sugerida: [quantidade]\n"
+                        f"• Custo estimado: [faixa de preço]\n"
+                        f"• Prioridade: [essencial / recomendado / opcional]\n\n"
+                        f"🚫 O QUE EVITAR:\n[suplementos desnecessários ou com riscos]\n\n"
+                        f"🥗 ANTES DOS SUPLEMENTOS, PRIORIZE:\n[ajustes alimentares que substituem suplementos]"
+                    )
+                    res = nutri_ia(prompt)
+                    salvar_receita("Suplementação", obj_supl, res)
+                    st.session_state['nutrint_supl'] = res
+
+            if st.session_state.get('nutrint_supl'):
+                st.markdown(f"<div class='card-blue'>{st.session_state['nutrint_supl']}</div>", unsafe_allow_html=True)
+
+        with tab_hidra:
+            st.markdown("### 💧 Hidratação Inteligente")
+            col1, col2 = st.columns(2)
+            with col1:
+                peso_h = st.number_input("⚖️ Peso (kg):", value=float(st.session_state.get('peso_atual',70) or 70), step=0.5, key="hidra_peso")
+                ativ_h = st.selectbox("🏃 Atividade física:", ["Sedentário","Levemente ativo","Moderado","Muito ativo","Atleta"], key="hidra_ativ")
+            with col2:
+                clima_h = st.selectbox("🌡️ Clima:", ["Frio","Temperado","Quente","Muito quente/Úmido"], key="hidra_clima")
+                saude_h = st.text_input("💊 Condições de saúde:", placeholder="ex: hipertensão, diabetes, grávida...", key="hidra_saude")
+
+            # Cálculo rápido
+            base = peso_h * 35  # ml
+            if ativ_h in ["Moderado"]: base += 300
+            elif ativ_h in ["Muito ativo"]: base += 600
+            elif ativ_h == "Atleta": base += 1000
+            if clima_h == "Quente": base += 300
+            elif clima_h == "Muito quente/Úmido": base += 600
+            meta_agua = base / 1000
+
+            st.markdown(f"""
+            <div class='meta-box' style='margin:12px 0;'>
+                <div style='font-size:0.82em;color:#C2410C;'>💧 SUA META DIÁRIA DE ÁGUA</div>
+                <div class='meta-numero'>{meta_agua:.1f} L</div>
+                <div style='font-size:0.85em;color:#C2410C;'>({int(meta_agua/0.25)} copos de 250ml)</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            if st.button("💧 GUIA COMPLETO DE HIDRATAÇÃO"):
+                with st.spinner("..."):
+                    prompt = (
+                        f"Crie um guia completo de hidratação personalizado.\n"
+                        f"Peso: {peso_h}kg. Atividade: {ativ_h}. Clima: {clima_h}. Saúde: {saude_h or 'sem restrições'}.\n"
+                        f"Meta calculada: {meta_agua:.1f}L/dia.\n\n"
+                        f"💧 GUIA DE HIDRATAÇÃO\n\n"
+                        f"Meta diária: {meta_agua:.1f}L\n\n"
+                        f"⏰ DISTRIBUIÇÃO AO LONGO DO DIA:\n[horários sugeridos para beber água]\n\n"
+                        f"✅ ALÉM DA ÁGUA — outras fontes de hidratação:\n[alimentos e bebidas que contribuem]\n\n"
+                        f"🚨 SINAIS DE DESIDRATAÇÃO:\n[o que observar]\n\n"
+                        f"💡 DICAS PARA BEBER MAIS ÁGUA:\n[estratégias práticas e realistas]"
+                    )
+                    res = nutri_ia(prompt)
+                    salvar_receita("Hidratação", f"{meta_agua:.1f}L", res)
+                    st.session_state['nutrint_hidra'] = res
+
+            if st.session_state.get('nutrint_hidra'):
+                st.markdown(f"<div class='card-blue'>{st.session_state['nutrint_hidra']}</div>", unsafe_allow_html=True)
 
 # --- RODAPÉ ---
 st.markdown(
