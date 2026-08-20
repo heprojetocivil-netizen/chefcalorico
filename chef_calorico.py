@@ -1335,7 +1335,6 @@ elif st.session_state.etapa == "App":
                 salvar_receita("Plano Calórico", f"{kcal} kcal — {obj}", res)
                 st.session_state.xp_total = st.session_state.get('xp_total',0) + 20
                 st.session_state['dist_resultado'] = res
-                st.rerun()
 
         if st.session_state.get('dist_resultado'):
             st.markdown("""
