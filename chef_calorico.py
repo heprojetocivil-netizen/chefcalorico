@@ -8,92 +8,80 @@ st.set_page_config(page_title="NutriMind AI", page_icon="🍽️", layout="wide"
 
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    .stApp { background- color: #1A1A2E; font-family: 'DM Sans', sans-serif; }
-    [data-testid="stSidebar"] { display: none; }
+    .stApp { background-color:#FDFAF6; font-family:'Inter',sans-serif; }
+    [data-testid="stSidebar"] { display:none; }
 
-    .stTextInput>div>div>input,
-    .stTextArea>div>textarea,
-    .stSelectbox>div>div>div,
-    .stNumberInput>div>div>input {
-        background-color: #FFF7ED !important;
-        color: #1A1A2E !important;
-        border: 1px solid #FDBA74 !important;
-        font-family: 'DM Sans', sans-serif !important;
+    .stTextInput>div>div>input, .stTextArea>div>textarea,
+    .stSelectbox>div>div>div, .stNumberInput>div>div>input {
+        background-color:#FFFFFF !important; color:#1A1A2E !important;
+        border:1px solid #CED4DA !important; font-family:'Inter',sans-serif !important;
     }
 
     .stButton>button {
-        width: 100%; border-radius: 12px; height: 3.5em;
-        background: linear-gradient(135deg, #EA580C, #F97316) !important;
-        color: white !important; font-weight: 600; border: none;
-        box-shadow: 2px 2px 8px rgba(234,88,12,0.25);
-        transition: all 0.2s ease;
+        width:100%; border-radius:10px; height:3.2em;
+        background:linear-gradient(135deg,#92400E,#78350F) !important; color:white !important;
+        font-weight:600; border:none; box-shadow:2px 2px 8px rgba(0,0,0,0.1);
+        font-family:'Inter',sans-serif !important; transition:all 0.2s ease;
     }
-    .stButton>button:hover { background: linear-gradient(135deg, #C2410C, #EA580C) !important; transform: translateY(-1px); }
+    .stButton>button:hover { background:linear-gradient(135deg,#78350F,#5C2D0A) !important; transform:translateY(-1px); }
     .stApp .stButton>button, .stApp .stButton>button p,
-    .stApp .stButton>button span, .stApp .stButton>button div { color: white !important; }
+    .stApp .stButton>button span, .stApp .stButton>button div { color:white !important; }
 
-    .stApp h1, .stApp h2, .stApp h3 { font-family: 'Playfair Display', serif !important; color: #1A1A2E !important; }
+    .stApp h1, .stApp h2, .stApp h3 { color:#3D2B1F !important; font-family:'Inter',sans-serif !important; font-weight:700 !important; }
 
-    .card { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); padding:22px; border-radius:16px; border:1px solid #FDBA74; margin-bottom:15px; white-space:normal; word-wrap:break-word; box-shadow:0 2px 12px rgba(234,88,12,0.08); }
-    .stApp .card, .stApp .card p, .stApp .card span, .stApp .card div, .stApp .card strong, .stApp .card em { color:#1A1A2E !important; }
+    .card { background:linear-gradient(135deg,#FDF8F0,#FAF0E6); padding:20px; border-radius:14px; border:1px solid #D4B896; margin-bottom:14px; white-space:normal; word-wrap:break-word; }
+    .stApp .card, .stApp .card p, .stApp .card span, .stApp .card div, .stApp .card strong, .stApp .card em { color:#3D2B1F !important; }
 
-    .card-dark { background:linear-gradient(135deg,#1C0A00,#2D1500); padding:22px; border-radius:16px; border:1px solid #EA580C; margin-bottom:15px; white-space:normal; word-wrap:break-word; }
-    .stApp .card-dark, .stApp .card-dark p, .stApp .card-dark span, .stApp .card-dark div, .stApp .card-dark strong { color:#FED7AA !important; }
+    .card-dark { background:linear-gradient(135deg,#FAF0E6,#F5E6D3); padding:20px; border-radius:14px; border:1px solid #C4956A; margin-bottom:14px; white-space:normal; word-wrap:break-word; }
+    .stApp .card-dark, .stApp .card-dark p, .stApp .card-dark span, .stApp .card-dark div, .stApp .card-dark strong { color:#3D2B1F !important; }
 
-    .card-green { background:linear-gradient(135deg,#F0FDF4,#DCFCE7); padding:22px; border-radius:16px; border:1px solid #86EFAC; margin-bottom:15px; white-space:normal; word-wrap:break-word; }
-    .stApp .card-green, .stApp .card-green p, .stApp .card-green span, .stApp .card-green div, .stApp .card-green strong { color:#14532D !important; }
+    .card-green { background:linear-gradient(135deg,#F0FDF4,#DCFCE7); padding:20px; border-radius:14px; border:1px solid #86EFAC; margin-bottom:14px; white-space:normal; word-wrap:break-word; }
+    .stApp .card-green, .stApp .card-green p, .stApp .card-green span, .stApp .card-green div { color:#14532D !important; }
 
-    .card-blue { background:linear-gradient(135deg,#EFF6FF,#DBEAFE); padding:22px; border-radius:16px; border:1px solid #93C5FD; margin-bottom:15px; white-space:normal; word-wrap:break-word; }
+    .card-blue { background:linear-gradient(135deg,#EFF6FF,#DBEAFE); padding:20px; border-radius:14px; border:1px solid #93C5FD; margin-bottom:14px; white-space:normal; word-wrap:break-word; }
     .stApp .card-blue, .stApp .card-blue p, .stApp .card-blue span, .stApp .card-blue div { color:#1E3A8A !important; }
 
-    .card-purple { background:linear-gradient(135deg,#F5F3FF,#EDE9FE); padding:22px; border-radius:16px; border:1px solid #C4B5FD; margin-bottom:15px; white-space:normal; word-wrap:break-word; }
-    .stApp .card-purple, .stApp .card-purple p, .stApp .card-purple span, .stApp .card-purple div { color:#4C1D95 !important; }
-
-    .card-red { background:linear-gradient(135deg,#FFF5F5,#FEE2E2); padding:22px; border-radius:16px; border:1px solid #FECACA; margin-bottom:15px; white-space:normal; word-wrap:break-word; }
+    .card-red { background:linear-gradient(135deg,#FFF5F5,#FEE2E2); padding:20px; border-radius:14px; border:1px solid #FECACA; margin-bottom:14px; white-space:normal; word-wrap:break-word; }
     .stApp .card-red, .stApp .card-red p, .stApp .card-red span, .stApp .card-red div { color:#7F1D1D !important; }
 
-    .painel-nutri { background:linear-gradient(135deg,#1A1A2E,#0F0A00); border:2px solid #F97316; border-radius:20px; padding:24px; margin-bottom:20px; }
-    .stApp .painel-nutri, .stApp .painel-nutri p, .stApp .painel-nutri span,
-    .stApp .painel-nutri div, .stApp .painel-nutri strong { color:#FED7AA !important; }
+    .card-yellow { background:linear-gradient(135deg,#FFFBEB,#FEF3C7); padding:18px; border-radius:12px; border:1px solid #FCD34D; margin-bottom:12px; white-space:normal; word-wrap:break-word; }
+    .stApp .card-yellow, .stApp .card-yellow p, .stApp .card-yellow span, .stApp .card-yellow div { color:#78350F !important; }
 
-    .meta-box { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); border:2px solid #F97316; border-radius:16px; padding:20px; text-align:center; margin-bottom:12px; }
-    .stApp .meta-box, .stApp .meta-box p, .stApp .meta-box span, .stApp .meta-box div { color:#C2410C !important; }
-    .stApp .meta-numero { color:#EA580C !important; }
-    .meta-numero { font-size:2.2em; font-weight:700; font-family:'Playfair Display',serif; color:#EA580C !important; }
+    .stat-box { background:#FFFFFF; border-radius:12px; padding:16px; text-align:center; border:1px solid #D4B896; }
+    .stApp .stat-box div, .stApp .stat-box span, .stApp .stat-box p { color:#3D2B1F !important; }
+    .stApp .stat-numero, .stat-numero { font-size:2em; font-weight:700; color:#7C5C3E !important; }
 
-    .stat-box { background:#FFF7ED; border-radius:12px; padding:18px; text-align:center; border:1px solid #FDBA74; }
-    .stApp .stat-box div, .stApp .stat-box span, .stApp .stat-box p { color:#1A1A2E !important; }
-    .stApp .stat-numero, .stat-numero { font-size:2em; font-weight:700; color:#EA580C !important; font-family:'Playfair Display',serif; }
+    .hist-item { background:#FFFFFF; border-radius:10px; padding:12px 16px; margin-bottom:8px; border-left:4px solid #D4B896; }
+    .stApp .hist-item, .stApp .hist-item p, .stApp .hist-item span, .stApp .hist-item div, .stApp .hist-item small { color:#3D2B1F !important; }
 
-    .hist-item { background:#FFF7ED; border-radius:10px; padding:12px 16px; margin-bottom:8px; border-left:4px solid #F97316; }
-    .stApp .hist-item, .stApp .hist-item p, .stApp .hist-item span,
-    .stApp .hist-item div, .stApp .hist-item small { color:#1A1A2E !important; }
+    .badge { background:#92400E; color:white !important; padding:4px 12px; border-radius:20px; font-size:0.78em; font-weight:600; display:inline-block; margin:2px; }
+    .badge-verde { background:#059669; color:white !important; padding:4px 12px; border-radius:20px; font-size:0.78em; font-weight:600; display:inline-block; margin:2px; }
+    .badge-amarelo { background:#B45309; color:white !important; padding:4px 12px; border-radius:20px; font-size:0.78em; font-weight:600; display:inline-block; margin:2px; }
+    .badge-azul { background:#1D4ED8; color:white !important; padding:4px 12px; border-radius:20px; font-size:0.78em; font-weight:600; display:inline-block; margin:2px; }
+    .badge-roxo { background:#6D28D9; color:white !important; padding:4px 12px; border-radius:20px; font-size:0.78em; font-weight:600; display:inline-block; margin:2px; }
 
-    .refeicao-box { background:#FFFFFF; border:2px solid #FDBA74; border-radius:14px; padding:18px 20px; margin-bottom:12px; }
-    .stApp .refeicao-box, .stApp .refeicao-box p, .stApp .refeicao-box span, .stApp .refeicao-box div { color:#1A1A2E !important; }
+    .divider { border:none; height:1px; background:linear-gradient(to right,transparent,#D4B896,transparent); margin:18px 0; }
 
-    .desafio-box { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); border:2px solid #EA580C; border-radius:14px; padding:18px; margin-bottom:10px; }
-    .stApp .desafio-box, .stApp .desafio-box p, .stApp .desafio-box span, .stApp .desafio-box div { color:#C2410C !important; }
+    .chat-user { background:#FFFFFF; border:1px solid #D4B896; border-radius:12px 12px 4px 12px; padding:12px 16px; margin:8px 0; }
+    .stApp .chat-user, .stApp .chat-user p, .stApp .chat-user span, .stApp .chat-user div { color:#3D2B1F !important; }
 
-    .conquista-box { background:#FFFBEB; border:1px solid #FCD34D; border-radius:10px; padding:12px 16px; margin-bottom:8px; text-align:center; }
-    .stApp .conquista-box, .stApp .conquista-box p, .stApp .conquista-box span, .stApp .conquista-box div { color:#92400E !important; }
+    .chat-persona { background:#FDFAF6; border:1px solid #D4B896; border-radius:4px 12px 12px 12px; padding:12px 16px; margin:8px 0; }
+    .stApp .chat-persona, .stApp .chat-persona p, .stApp .chat-persona span, .stApp .chat-persona div { color:#3D2B1F !important; }
 
-    .badge { background:#EA580C; color:white !important; padding:4px 14px; border-radius:20px; font-size:0.78em; font-weight:600; display:inline-block; margin:2px; }
-    .badge-verde { background:#059669; color:white !important; padding:4px 14px; border-radius:20px; font-size:0.78em; font-weight:600; display:inline-block; margin:2px; }
-    .badge-azul { background:#1D4ED8; color:white !important; padding:4px 14px; border-radius:20px; font-size:0.78em; font-weight:600; display:inline-block; margin:2px; }
-    .badge-roxo { background:#7C3AED; color:white !important; padding:4px 14px; border-radius:20px; font-size:0.78em; font-weight:600; display:inline-block; margin:2px; }
+    .questao-box { background:#FFFFFF; border:2px solid #D4B896; border-radius:12px; padding:18px; margin-bottom:14px; }
+    .stApp .questao-box, .stApp .questao-box p, .stApp .questao-box span, .stApp .questao-box div { color:#3D2B1F !important; }
 
-    .perfil-btn>button { background:linear-gradient(135deg,#EA580C,#F97316) !important; color:white !important; font-weight:700 !important; border-radius:12px !important; height:3em !important; }
-    .perfil-btn>button, .perfil-btn>button p, .perfil-btn>button span { color:white !important; }
+    .avaliacao-box { background:#FFFFFF; border:2px solid #D4B896; border-radius:14px; padding:18px; margin-bottom:12px; }
+    .stApp .avaliacao-box, .stApp .avaliacao-box p, .stApp .avaliacao-box span, .stApp .avaliacao-box div { color:#3D2B1F !important; }
 
-    .divider { border:none; height:1px; background:linear-gradient(to right,transparent,#FDBA74,transparent); margin:20px 0; }
+    .meta-box { background:#FFFFFF; border:2px solid #D4B896; border-radius:12px; padding:16px; text-align:center; margin:10px 0; }
+    .stApp .meta-box, .stApp .meta-box div, .stApp .meta-box span { color:#3D2B1F !important; }
+    .stApp .meta-numero { font-size:2em; font-weight:700; color:#7C5C3E !important; }
 
-    .ia-preventiva { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); border-left:4px solid #EA580C; border-radius:0 12px 12px 0; padding:16px 20px; margin-bottom:12px; }
-    .stApp .ia-preventiva, .stApp .ia-preventiva p, .stApp .ia-preventiva span, .stApp .ia-preventiva div { color:#92400E !important; }
-
-    .stApp .badge-verde { color: white !important; }
+    .chat-scroll-container { max-height:40vh; overflow-y:auto; display:flex; flex-direction:column; scroll-behavior:smooth; padding-bottom:4px; }
+    .chat-scroll-container > * { flex-shrink:0; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -238,7 +226,7 @@ def nutri_ia(prompt, system_extra=""):
         )
         response = client.chat.completions.create(
             messages=[{"role":"system","content":system},{"role":"user","content":prompt}],
-            model="llama-3.3-70b-versatile",
+            model="gemma2-9b-it",
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -259,7 +247,6 @@ def barra_salvar():
             f"🔥 {streak} dias seguidos · ⭐ {xp} XP · 🍽️ {st.session_state.refeicoes_geradas} refeições geradas"
             f"</span></div>", unsafe_allow_html=True)
     with col_b:
-        st.markdown("<br>", unsafe_allow_html=True)
         st.download_button("💾 SALVAR DADOS (.json)", data=gerar_json(),
             file_name=f"nutrimind_{nome_u}.json", mime="application/json", use_container_width=True)
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
@@ -270,11 +257,9 @@ def barra_salvar():
 if st.session_state.etapa == "Login":
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        st.markdown("<br><br>", unsafe_allow_html=True)
         st.title("🍽️ NutriMind AI")
         st.markdown("**Seu nutricionista pessoal, chef e planejador alimentar em um só lugar.**")
         st.markdown("*Comer bem nunca foi tão simples.*")
-        st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("""<div style="background:#FFF7ED;border:1px solid #FDBA74;border-radius:10px;
         padding:12px 16px;margin-bottom:16px;font-size:0.88em;color:#1A1A2E;line-height:1.6;">
         🔒 <strong>ACESSO RESTRITO A CLIENTES DO QUIZ COM PRÊMIOS</strong><br>
@@ -376,7 +361,6 @@ elif st.session_state.etapa == "App":
             st.markdown(f"<span class='badge'>🎯 {st.session_state.objetivo}</span> "
                 f"<span class='badge-verde'>🍴 {st.session_state.estilo_alimentar}</span>", unsafe_allow_html=True)
         with col_r:
-            st.markdown("<br>", unsafe_allow_html=True)
             if st.button("🚪 Sair"):
                 for k in list(st.session_state.keys()):
                     del st.session_state[k]
@@ -931,7 +915,7 @@ elif st.session_state.etapa == "App":
                             perfil_txt = (f"Usuário: {st.session_state.usuario}. Objetivo: {st.session_state.objetivo}. "
                                 f"Meta: {st.session_state.calorias_padrao} kcal. Restrições: {st.session_state.restricoes or 'nenhuma'}.")
                             msgs = [{"role":"system","content":f"Você é o NutriMind AI, nutricionista pessoal. {perfil_txt} Responda de forma prática e adaptativa — reorganize o plano quando necessário, nunca culpe o usuário por desvios."}] + historico_msgs + [{"role":"user","content":pergunta}]
-                            response = client.chat.completions.create(messages=msgs, model="llama-3.3-70b-versatile")
+                            response = client.chat.completions.create(messages=msgs, model="gemma2-9b-it")
                             resp = response.choices[0].message.content
                         except Exception as e:
                             resp = f"⚠️ Erro: {e}"
@@ -1007,7 +991,6 @@ elif st.session_state.etapa == "App":
                 with col_d:
                     st.markdown(f"<div class='desafio-box'><strong>{nome}</strong> — {dias} dias<br><small>{desc}</small></div>", unsafe_allow_html=True)
                 with col_b:
-                    st.markdown("<br>", unsafe_allow_html=True)
                     if st.button("🚀 Iniciar", key=f"des_{chave}"):
                         with st.spinner("Preparando seu desafio..."):
                             prompt = (
@@ -1061,7 +1044,6 @@ elif st.session_state.etapa == "App":
         total = len(CONQUISTAS_DEF)
         st.markdown(f"**{obtidas} de {total} conquistas desbloqueadas**")
         st.progress(obtidas / total if total > 0 else 0)
-        st.markdown("<br>", unsafe_allow_html=True)
 
         cols_c = st.columns(3)
         for i, (chave, nome, desc) in enumerate(CONQUISTAS_DEF):
