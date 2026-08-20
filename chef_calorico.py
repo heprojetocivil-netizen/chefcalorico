@@ -1264,10 +1264,29 @@ elif st.session_state.etapa == "App":
 
         if st.button("🤖 GERAR PLANO", use_container_width=True):
             with st.spinner("Gerando..."):
+                nomes = {
+                    "2": ["Almoço","Jantar"],
+                    "3": ["Café da manhã","Almoço","Jantar"],
+                    "4": ["Café da manhã","Almoço","Lanche da tarde","Jantar"],
+                    "5": ["Café da manhã","Lanche da manhã","Almoço","Lanche da tarde","Jantar"],
+                    "6": ["Café da manhã","Lanche da manhã","Almoço","Lanche da tarde","Jantar","Ceia"],
+                }
+                lista = nomes.get(nref, nomes["3"])
+                kcal_ref = int(kcal) // int(nref)
+                refeicoes_txt = "\n".join(f"- {r}: {kcal_ref} kcal" for r in lista)
                 res = nutri_ia(
-                    f"Plano alimentar: {nref} refeições, {int(kcal)} kcal/dia, culinária {cul}.\n"
-                    f"Para cada refeição: nome, prato, ingredientes, preparo (2 linhas).\n"
-                    f"Final: tabela com totais. Português brasileiro."
+                    f"Crie UM PLANO ALIMENTAR COMPLETO com EXATAMENTE {nref} refeições.\n"
+                    f"Culinária: {cul}. Total: {int(kcal)} kcal/dia.\n\n"
+                    f"OBRIGATÓRIO — gere TODAS as {nref} refeições abaixo, uma por uma:\n"
+                    f"{refeicoes_txt}\n\n"
+                    f"Para CADA refeição use este formato:\n"
+                    f"**[Nome da refeição] — [X] kcal**\n"
+                    f"Prato: [nome do prato]\n"
+                    f"Ingredientes: [lista simples]\n"
+                    f"Preparo: [2 linhas]\n\n"
+                    f"NÃO pare antes de completar todas as {nref} refeições.\n"
+                    f"Ao final: totais do dia (kcal, proteína, carb, gordura).\n"
+                    f"Português brasileiro."
                 )
             st.session_state.dist_res = res
 
