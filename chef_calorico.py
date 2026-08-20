@@ -1269,7 +1269,6 @@ elif st.session_state.etapa == "App":
         nref_val = st.session_state.dist_nref
         kcal_val = int(st.session_state.dist_kcal)
 
-        # Nomes das refeições por quantidade
         nomes_ref = {
             "2": ["Almoço","Jantar"],
             "3": ["Café da manhã","Almoço","Jantar"],
@@ -1278,62 +1277,54 @@ elif st.session_state.etapa == "App":
             "6": ["Café da manhã","Lanche manhã","Almoço","Lanche tarde","Jantar","Ceia"],
         }
         lista = nomes_ref.get(nref_val, nomes_ref["3"])
+        n = len(lista)
 
-        # Defaults de % por refeição (sugestão inteligente)
-        defaults = {
-            "Café da manhã": 25, "Lanche manhã": 10, "Almoço": 35,
-            "Lanche tarde": 10, "Lanche": 10, "Jantar": 25, "Ceia": 5, "Almoço": 35,
+        defaults_pct = {
+            "Café da manhã":25,"Lanche manhã":10,"Almoço":35,
+            "Lanche tarde":10,"Lanche":10,"Jantar":25,"Ceia":5,
         }
 
-        st.markdown("### 📊 Distribua as calorias por refeição")
-        st.markdown("*Arraste os sliders — o total deve somar 100%*")
+        st.markdown("### 📊 Distribua as calorias")
+        st.markdown("*Cada slider tem limite dinâmico — não deixa ultrapassar 100%*")
 
         pcts = {}
-        total_usado = 0
-        for i, ref in enumerate(lista[:-1]):  # todos menos o último
-            restante_max = 100 - total_usado - (len(lista) - 1 - i) * 1
-            val_default = min(defaults.get(ref, 20), restante_max)
+        usado = 0
+        for i, ref in enumerate(lista[:-1]):
+            reserva = n - 1 - i  # 1% mínimo para cada refeição restante
+            max_val = 100 - usado - reserva
+            max_val = max(max_val, 1)
+            def_val = min(defaults_pct.get(ref, 20), max_val)
+
             pct = st.slider(
                 f"{ref}",
                 min_value=1,
-                max_value=restante_max,
-                value=min(val_default, restante_max),
+                max_value=max_val,
+                value=def_val,
                 format="%d%%",
-                key=f"dist_pct_{i}"
+                key=f"dist_s_{nref_val}_{i}"
             )
             kcal_ref = round(kcal_val * pct / 100)
             st.markdown(
-                f"<div style='margin-top:-12px;margin-bottom:8px;font-size:0.82em;"
-                f"color:#EA580C;font-weight:600;'>→ {kcal_ref} kcal</div>",
+                f"<p style='margin-top:-14px;margin-bottom:6px;"
+                f"font-size:0.82em;color:#EA580C;font-weight:600;'>"
+                f"→ {kcal_ref} kcal</p>",
                 unsafe_allow_html=True
             )
             pcts[ref] = pct
-            total_usado += pct
+            usado += pct
 
-        # Última refeição recebe o restante
+        # Última refeição = restante automático
         ultima = lista[-1]
-        pct_ultimo = 100 - total_usado
-        kcal_ultimo = round(kcal_val * pct_ultimo / 100)
+        pct_ultimo = 100 - usado
         pcts[ultima] = pct_ultimo
+        kcal_ultimo = round(kcal_val * pct_ultimo / 100)
         st.markdown(
-            f"**{ultima}** — automático: **{pct_ultimo}%** → {kcal_ultimo} kcal"
-        )
-
-        # Validação total
-        total = sum(pcts.values())
-        cor = "#059669" if total == 100 else "#B91C1C"
-        st.markdown(
-            f"<div style='background:#F8F9FA;border-radius:8px;padding:8px 14px;"
-            f"margin:10px 0;font-weight:700;color:{cor};'>"
-            f"Total: {total}% = {kcal_val} kcal {'✅' if total==100 else '⚠️ deve somar 100%'}"
-            f"</div>",
-            unsafe_allow_html=True
+            f"**{ultima}** ← automático: **{pct_ultimo}%** = {kcal_ultimo} kcal ✅"
         )
 
         st.markdown("---")
 
-        if st.button("🤖 GERAR PLANO", use_container_width=True,
-                     disabled=(total != 100)):
+        if st.button("🤖 GERAR PLANO", use_container_width=True):
             refs_txt = " | ".join(
                 f"{r} ({pcts[r]}% = {round(kcal_val*pcts[r]/100)} kcal)"
                 for r in lista
@@ -1348,9 +1339,9 @@ elif st.session_state.etapa == "App":
                 f"Preparo: [1 linha]\n\n"
                 f"Gere TODAS as {nref_val} refeições. Seja breve. Português brasileiro."
             )
-            with st.spinner(f"Gerando plano {cul_val} com {nref_val} refeições e {kcal_val} kcal..."):
+            with st.spinner(f"Gerando {nref_val} refeições — {kcal_val} kcal..."):
                 res = nutri_ia(prompt,
-                    system_extra=f"ATENÇÃO: use EXATAMENTE {kcal_val} kcal/dia com a distribuição informada. Ignore qualquer outra meta calórica.")
+                    system_extra=f"Use EXATAMENTE {kcal_val} kcal divididas conforme informado. Ignore qualquer outra meta calórica.")
             st.session_state.dist_res = res
 
         if st.session_state.get("dist_res"):
