@@ -226,7 +226,7 @@ def nutri_ia(prompt, system_extra=""):
         )
         response = client.chat.completions.create(
             messages=[{"role":"system","content":system},{"role":"user","content":prompt}],
-            model="gemma2-9b-it",
+            model="openai/gpt-oss-120b",
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -915,7 +915,7 @@ elif st.session_state.etapa == "App":
                             perfil_txt = (f"Usuário: {st.session_state.usuario}. Objetivo: {st.session_state.objetivo}. "
                                 f"Meta: {st.session_state.calorias_padrao} kcal. Restrições: {st.session_state.restricoes or 'nenhuma'}.")
                             msgs = [{"role":"system","content":f"Você é o NutriMind AI, nutricionista pessoal. {perfil_txt} Responda de forma prática e adaptativa — reorganize o plano quando necessário, nunca culpe o usuário por desvios."}] + historico_msgs + [{"role":"user","content":pergunta}]
-                            response = client.chat.completions.create(messages=msgs, model="gemma2-9b-it")
+                            response = client.chat.completions.create(messages=msgs, model="openai/gpt-oss-120b")
                             resp = response.choices[0].message.content
                         except Exception as e:
                             resp = f"⚠️ Erro: {e}"
