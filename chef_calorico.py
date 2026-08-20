@@ -1249,89 +1249,34 @@ elif st.session_state.etapa == "App":
     # ──────────────────────────────────────────
     elif st.session_state.pagina == "Distribuicao":
         st.header("🧮 Distribuição Calórica Inteligente")
-        st.markdown("Configure sua meta e gere seu plano personalizado.")
 
-        # Defaults
-        for k,v in [('dc_kcal',1500),('dc_obj','Emagrecer'),('dc_est','🇧🇷 Brasileira'),
-                    ('dc_refs',['☕ Café da manhã','🍽️ Almoço','🌙 Jantar']),
-                    ('dc_ng',''),('dc_np',''),('dc_resultado','')]:
-            if k not in st.session_state: st.session_state[k] = v
+        culinaria = st.selectbox("🍽️ Culinária:", [
+            "🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa",
+            "🇮🇹 Italiana","🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"])
 
-        col1, col2 = st.columns(2)
-        with col1:
-            kcal = st.number_input("🔥 Calorias/dia:", min_value=800, max_value=5000,
-                value=int(st.session_state.dc_kcal), step=50, key="dc_kcal_w")
-            obj = st.selectbox("🎯 Objetivo:",
-                ["Emagrecer","Manter peso","Ganhar massa","Melhorar alimentação"],
-                key="dc_obj_w")
-            est = st.selectbox("🍽️ Culinária:",
-                ["🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa","🇮🇹 Italiana",
-                 "🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"], key="dc_est_w")
-        with col2:
-            refs = st.multiselect("🍴 Refeições:",
-                ["☕ Café da manhã","🍎 Lanche da manhã","🍽️ Almoço",
-                 "🥪 Lanche da tarde","🌙 Jantar","🌙 Ceia"],
-                default=st.session_state.dc_refs, key="dc_refs_w")
-            if not refs: refs = ["☕ Café da manhã","🍽️ Almoço","🌙 Jantar"]
-            ng = st.text_input("🚫 Não gosta:", key="dc_ng_w")
-            np_ = st.text_input("⚠️ Não pode:", key="dc_np_w")
+        n_refeicoes = st.selectbox("🍴 Quantas refeições por dia?", [
+            "2 refeições","3 refeições","4 refeições","5 refeições","6 refeições"])
 
-        # Distribuição
-        pbase = {"Emagrecer":{"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":35,"🥪 Lanche da tarde":5,"🌙 Jantar":25,"🌙 Ceia":5},"Ganhar massa":{"☕ Café da manhã":25,"🍎 Lanche da manhã":15,"🍽️ Almoço":30,"🥪 Lanche da tarde":15,"🌙 Jantar":25,"🌙 Ceia":10},"Manter peso":{"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":30,"🥪 Lanche da tarde":10,"🌙 Jantar":25,"🌙 Ceia":5},"Melhorar alimentação":{"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":30,"🥪 Lanche da tarde":10,"🌙 Jantar":25,"🌙 Ceia":5}}
-        base = pbase.get(obj, pbase["Manter peso"])
-        ps = {r: base.get(r,15) for r in refs}
-        tot = sum(ps.values())
-        pn = {r: round(v/tot*100) for r,v in ps.items()}
-        dif = 100 - sum(pn.values())
-        if dif and pn: pn[max(pn,key=pn.get)] += dif
+        kcal = st.number_input("🔥 Quantas calorias por dia?",
+            min_value=800, max_value=5000, value=1500, step=100)
 
-        st.markdown("### 📊 Distribuição")
-        for r in refs:
-            p = pn.get(r,0)
-            ca = round(kcal*p/100)
-            a,b,d,e = st.columns([3,1,1,4])
-            a.markdown(f"**{r}**"); b.markdown(f"**{p}%**")
-            d.markdown(f"*{ca} kcal*"); e.progress(p/100)
-        st.markdown(f"**Total: {sum(pn.values())}% = {int(kcal)} kcal ✅**")
-        st.markdown("---")
-
-        # ÁREA DO RESULTADO — fica acima do botão para não sumir
-        resultado_area = st.empty()
-
-        if st.session_state.dc_resultado:
-            resultado_area.markdown(st.session_state.dc_resultado)
-
-        if st.button("🤖 CRIAR MEU PLANO ALIMENTAR PERSONALIZADO",
-                     use_container_width=True, key="dc_gerar"):
-            desc = "\n".join(f"- {r}: {round(kcal*pn.get(r,0)/100)} kcal ({pn.get(r,0)}%)" for r in refs)
+        if st.button("🤖 GERAR MEU PLANO", use_container_width=True):
             prompt = (
-                f"Monte um plano alimentar completo para 1 dia.\n"
-                f"META: {int(kcal)} kcal | Objetivo: {obj} | Culinária: {est}\n"
-                f"Não gosta: {ng or 'nenhum'} | Não pode: {np_ or 'nenhum'}\n\n"
-                f"DISTRIBUIÇÃO:\n{desc}\n\n"
-                f"Para cada refeição:\n"
-                f"EMOJI REFEIÇÃO — X kcal\n**Prato**\nIngredientes: lista\nPreparo: 2-3 linhas\n\n"
-                f"Final: tabela de macros totais. Português brasileiro."
+                f"Crie um plano alimentar completo para {n_refeicoes} por dia.\n"
+                f"Total: {int(kcal)} kcal/dia. Culinária: {culinaria}.\n\n"
+                f"Para cada refeição, escreva:\n"
+                f"**[Nome da refeição]** — [X] kcal\n"
+                f"Prato: [nome do prato]\n"
+                f"Ingredientes: [lista rápida]\n"
+                f"Preparo: [2 linhas]\n\n"
+                f"No final, mostre o total de calorias, proteínas, carboidratos e gorduras.\n"
+                f"Seja direto, prático e em português brasileiro."
             )
-            with st.spinner("🍽️ Gerando seu plano..."):
+            with st.spinner("Gerando seu plano..."):
                 res = nutri_ia(prompt)
-            st.session_state.dc_resultado = res
-            salvar_receita("Plano Calórico", f"{int(kcal)} kcal — {obj}", res)
-            st.session_state.xp_total = st.session_state.get('xp_total',0) + 20
-            resultado_area.markdown(res)
-
-        if st.session_state.dc_resultado:
-            c1, c2 = st.columns(2)
-            with c1:
-                st.download_button("📋 Baixar", data=st.session_state.dc_resultado,
-                    file_name="plano.txt", mime="text/plain", use_container_width=True)
-            with c2:
-                if st.button("❤️ Salvar", key="dc_sv", use_container_width=True):
-                    st.session_state.receitas_salvas.append({
-                        'tipo':'Plano Calórico','nome':f"{int(kcal)} kcal — {obj}",
-                        'conteudo':st.session_state.dc_resultado,
-                        'data':datetime.now().strftime('%d/%m %H:%M'),'favorito':False})
-                    st.success("✅ Salvo!")
+            st.markdown(res)
+            st.download_button("📋 Baixar plano", data=res,
+                file_name="plano_calorico.txt", mime="text/plain")
 
     elif st.session_state.pagina == "NutricaoInt":
         st.header("🥗 Nutrição Inteligente")
