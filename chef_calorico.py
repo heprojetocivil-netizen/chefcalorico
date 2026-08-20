@@ -1418,8 +1418,7 @@ elif st.session_state.etapa == "App":
                     total_b = sum(pcts_sel.values())
                     pcts_finais = {r: round(v/total_b*100) for r,v in pcts_sel.items()}
                 with st.spinner("A IA está montando seu plano..."):
-                    # Monta descrição das refeições com calorias
-                    pcts_finais = st.session_state.dist_pcts
+                    # usa pcts_finais já calculado acima
                     refeicoes_desc = "\n".join(
                         f"- {r}: {round(kcal * pcts_finais.get(r,0) / 100)} kcal ({pcts_finais.get(r,0)}%)"
                         for r in refs_sel
