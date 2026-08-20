@@ -1285,48 +1285,68 @@ elif st.session_state.etapa == "App":
         }
 
         st.markdown("### 📊 Distribua as calorias")
-        st.markdown("*Cada slider tem limite dinâmico — não deixa ultrapassar 100%*")
+        st.caption("O total deve somar 100% — a última refeição recebe o restante automaticamente.")
 
         pcts = {}
         usado = 0
-        erro_dist = False
+
         for i, ref in enumerate(lista[:-1]):
-            reserva = n - 1 - i
-            max_val = max(100 - usado - reserva, 1)
-            key = f"dist_s_{nref_val}_{i}"
+            reserva = n - 1 - i  # mínimo 1% para cada refeição restante
+            max_disp = 100 - usado - reserva
+            max_disp = max(max_disp, 1)
+            def_val  = min(defaults_pct.get(ref, 20), max_disp)
 
-            # Se o valor salvo no session_state excede o max, resetar
-            if key in st.session_state and st.session_state[key] > max_val:
-                st.session_state[key] = max_val
+            key = f"dist_n_{nref_val}_{i}"
+            # Garantir que o valor salvo não excede o máximo disponível
+            if key not in st.session_state:
+                st.session_state[key] = def_val
+            if st.session_state[key] > max_disp:
+                st.session_state[key] = max_disp
 
-            def_val = min(defaults_pct.get(ref, 20), max_val)
+            col_a, col_b = st.columns([3, 1])
+            with col_a:
+                # Barra visual de progresso
+                st.markdown(
+                    f"<div style='margin-bottom:4px;font-weight:600;font-size:0.9em;'>{ref}</div>"
+                    f"<div style='background:#F1F5F9;border-radius:999px;height:10px;'>"
+                    f"<div style='background:#EA580C;border-radius:999px;height:100%;"
+                    f"width:{st.session_state[key]}%;'></div></div>",
+                    unsafe_allow_html=True
+                )
+            with col_b:
+                pct = st.number_input(
+                    f"% {ref}",
+                    min_value=1,
+                    max_value=max_disp,
+                    value=st.session_state[key],
+                    step=1,
+                    key=key,
+                    label_visibility="collapsed"
+                )
 
-            pct = st.slider(
-                f"{ref}",
-                min_value=1,
-                max_value=max_val,
-                value=def_val,
-                format="%d%%",
-                key=key
-            )
             kcal_ref = round(kcal_val * pct / 100)
-            st.markdown(
-                f"<p style='margin-top:-14px;margin-bottom:6px;"
-                f"font-size:0.82em;color:#EA580C;font-weight:600;'>"
-                f"→ {kcal_ref} kcal</p>",
-                unsafe_allow_html=True
-            )
+            st.caption(f"→ {kcal_ref} kcal  |  disponível para o resto: {max_disp - pct}%")
             pcts[ref] = pct
             usado += pct
 
         # Última refeição = restante automático
-        ultima = lista[-1]
-        pct_ultimo = 100 - usado
-        pcts[ultima] = pct_ultimo
-        kcal_ultimo = round(kcal_val * pct_ultimo / 100)
-        st.markdown(
-            f"**{ultima}** ← automático: **{pct_ultimo}%** = {kcal_ultimo} kcal ✅"
-        )
+        ultima    = lista[-1]
+        pct_ult   = 100 - usado
+        kcal_ult  = round(kcal_val * pct_ult / 100)
+        pcts[ultima] = pct_ult
+
+        col_a, col_b = st.columns([3, 1])
+        with col_a:
+            st.markdown(
+                f"<div style='margin-bottom:4px;font-weight:600;font-size:0.9em;'>{ultima} <span style='color:#059669;font-size:0.8em;'>(automático)</span></div>"
+                f"<div style='background:#F1F5F9;border-radius:999px;height:10px;'>"
+                f"<div style='background:#059669;border-radius:999px;height:100%;width:{pct_ult}%;'></div></div>",
+                unsafe_allow_html=True
+            )
+        with col_b:
+            st.markdown(f"<div style='padding-top:4px;font-weight:700;color:#059669;'>{pct_ult}%</div>",
+                        unsafe_allow_html=True)
+        st.caption(f"→ {kcal_ult} kcal  |  Total: 100% = {kcal_val} kcal ✅")
 
         st.markdown("---")
 
@@ -1347,7 +1367,7 @@ elif st.session_state.etapa == "App":
             )
             with st.spinner(f"Gerando {nref_val} refeições — {kcal_val} kcal..."):
                 res = nutri_ia(prompt,
-                    system_extra=f"Use EXATAMENTE {kcal_val} kcal divididas conforme informado. Ignore qualquer outra meta calórica.")
+                    system_extra=f"Use EXATAMENTE {kcal_val} kcal divididas conforme: {refs_txt}. Ignore qualquer outra meta calórica.")
             st.session_state.dist_res = res
 
         if st.session_state.get("dist_res"):
