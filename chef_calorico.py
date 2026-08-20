@@ -1255,34 +1255,43 @@ elif st.session_state.etapa == "App":
         with col1:
             culinaria = st.selectbox("🍽️ Culinária:", [
                 "🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa",
-                "🇮🇹 Italiana","🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"])
+                "🇮🇹 Italiana","🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"],
+                key="dist_culinaria")
         with col2:
-            n_refeicoes = st.selectbox("🍴 Refeições por dia:", [
-                "2","3","4","5","6"])
+            n_refeicoes = st.selectbox("🍴 Refeições por dia:",
+                ["2","3","4","5","6"], key="dist_nref")
         with col3:
             kcal = st.number_input("🔥 Calorias por dia:",
-                min_value=800, max_value=5000, value=1500, step=100)
+                min_value=800, max_value=5000, value=1500, step=100,
+                key="dist_kcal2")
 
-        if st.button("🤖 GERAR MEU PLANO", use_container_width=True):
+        gerar = st.button("🤖 GERAR MEU PLANO", use_container_width=True,
+                          key="dist_btn")
+
+        if gerar:
             kcal_por_ref = int(kcal) // int(n_refeicoes)
             prompt = (
-                f"Crie um plano alimentar para {n_refeicoes} refeições, {int(kcal)} kcal/dia, culinária {culinaria}.\n"
+                f"Crie um plano alimentar para {n_refeicoes} refeições, "
+                f"{int(kcal)} kcal/dia, culinária {culinaria}.\n"
                 f"Cada refeição tem aproximadamente {kcal_por_ref} kcal.\n\n"
-                f"FORMATO OBRIGATÓRIO para cada refeição:\n"
+                f"FORMATO para cada refeição:\n"
                 f"**Refeição X — Nome** (X kcal)\n"
-                f"- Prato: [nome]\n"
-                f"- Ingredientes: [lista]\n"
-                f"- Preparo: [máximo 2 linhas]\n\n"
-                f"Ao final: **Totais do dia** em tabela simples (calorias, proteína, carb, gordura).\n"
-                f"Seja objetivo. Português brasileiro."
+                f"- Prato: nome\n- Ingredientes: lista\n- Preparo: 2 linhas\n\n"
+                f"Final: tabela com totais do dia.\nPortuguês brasileiro."
             )
             with st.spinner(f"Gerando plano com {n_refeicoes} refeições..."):
                 res = nutri_ia(prompt)
+            st.session_state['dist_res'] = res
+
+        if st.session_state.get('dist_res'):
             st.markdown("---")
-            st.markdown(res)
-            st.download_button("📋 Baixar plano", data=res,
-                file_name="plano_calorico.txt", mime="text/plain",
-                use_container_width=True)
+            st.markdown(st.session_state['dist_res'])
+            st.download_button("📋 Baixar plano",
+                data=st.session_state['dist_res'],
+                file_name="plano_calorico.txt",
+                mime="text/plain",
+                use_container_width=True,
+                key="dist_dl")
 
     elif st.session_state.pagina == "NutricaoInt":
         st.header("🥗 Nutrição Inteligente")
