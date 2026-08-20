@@ -1251,46 +1251,57 @@ elif st.session_state.etapa == "App":
     elif st.session_state.pagina == "Distribuicao":
         st.header("🧮 Distribuição Calórica Inteligente")
 
-        if 'dist_res' not in st.session_state:
-            st.session_state.dist_res = ""
-
+        # Campos — lidos ANTES do botão, valores salvos em session_state pelas keys
         c1, c2, c3 = st.columns(3)
         with c1:
-            cul = st.selectbox("🍽️ Culinária", ["🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa","🇮🇹 Italiana","🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"], key="dist_cul")
+            cul  = st.selectbox("🍽️ Culinária",
+                ["🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa",
+                 "🇮🇹 Italiana","🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"],
+                key="dist_cul")
         with c2:
-            nref = st.selectbox("🍴 Refeições", ["2","3","4","5","6"], key="dist_nref")
+            nref = st.selectbox("🍴 Refeições",
+                ["2","3","4","5","6"], key="dist_nref")
         with c3:
-            kcal = st.number_input("🔥 Calorias/dia", min_value=800, max_value=5000, value=1500, step=100, key="dist_kcal")
+            kcal = st.number_input("🔥 Calorias/dia",
+                min_value=800, max_value=5000, value=1500, step=100,
+                key="dist_kcal")
+
+        # Ler valores diretamente do session_state (onde os widgets salvam)
+        cul_val  = st.session_state.dist_cul
+        nref_val = st.session_state.dist_nref
+        kcal_val = int(st.session_state.dist_kcal)
 
         if st.button("🤖 GERAR PLANO", use_container_width=True):
-            with st.spinner("Gerando..."):
-                nomes = {
-                    "2": ["Almoço","Jantar"],
-                    "3": ["Café da manhã","Almoço","Jantar"],
-                    "4": ["Café da manhã","Almoço","Lanche","Jantar"],
-                    "5": ["Café da manhã","Lanche manhã","Almoço","Lanche tarde","Jantar"],
-                    "6": ["Café da manhã","Lanche manhã","Almoço","Lanche tarde","Jantar","Ceia"],
-                }
-                lista = nomes.get(nref, nomes["3"])
-                kcal_ref = int(kcal) // int(nref)
-                refeicoes_txt = " | ".join(f"{r} ({kcal_ref} kcal)" for r in lista)
-                res = nutri_ia(
-                    f"Plano: {cul}, {int(kcal)} kcal, {nref} refeições.\n"
-                    f"Refeições: {refeicoes_txt}\n\n"
-                    f"Para cada refeição:\n"
-                    f"**[Refeição] — [kcal]**\n"
-                    f"Prato: [nome]\n"
-                    f"Ingredientes: [lista curta]\n"
-                    f"Preparo: [1 linha]\n\n"
-                    f"Gere TODAS as {nref} refeições completas.\n"
-                    f"Seja BREVE em cada uma. Português brasileiro."
-                )
+            nomes = {
+                "2": ["Almoço","Jantar"],
+                "3": ["Café da manhã","Almoço","Jantar"],
+                "4": ["Café da manhã","Almoço","Lanche","Jantar"],
+                "5": ["Café da manhã","Lanche manhã","Almoço","Lanche tarde","Jantar"],
+                "6": ["Café da manhã","Lanche manhã","Almoço","Lanche tarde","Jantar","Ceia"],
+            }
+            lista    = nomes.get(nref_val, nomes["3"])
+            kcal_ref = kcal_val // int(nref_val)
+            refs_txt = " | ".join(f"{r} ({kcal_ref} kcal)" for r in lista)
+
+            prompt = (
+                f"Plano: {cul_val}, {kcal_val} kcal/dia, {nref_val} refeições.\n"
+                f"Refeições: {refs_txt}\n\n"
+                f"Para cada refeição:\n"
+                f"**[Nome] — [kcal]**\n"
+                f"Prato: [nome]\n"
+                f"Ingredientes: [lista curta]\n"
+                f"Preparo: [1 linha]\n\n"
+                f"Gere TODAS as {nref_val} refeições. Seja breve. Português brasileiro."
+            )
+            with st.spinner(f"Gerando plano {cul_val} com {nref_val} refeições e {kcal_val} kcal..."):
+                res = nutri_ia(prompt)
             st.session_state.dist_res = res
 
-        if st.session_state.dist_res:
+        if st.session_state.get("dist_res"):
             st.markdown("---")
             st.markdown(st.session_state.dist_res)
-            st.download_button("📋 Baixar", data=st.session_state.dist_res, file_name="plano.txt", mime="text/plain")
+            st.download_button("📋 Baixar", data=st.session_state.dist_res,
+                file_name="plano.txt", mime="text/plain", key="dist_dl")
 
     elif st.session_state.pagina == "NutricaoInt":
         st.header("🥗 Nutrição Inteligente")
