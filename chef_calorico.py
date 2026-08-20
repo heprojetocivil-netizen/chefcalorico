@@ -227,6 +227,7 @@ def nutri_ia(prompt, system_extra=""):
         response = client.chat.completions.create(
             messages=[{"role":"system","content":system},{"role":"user","content":prompt}],
             model="openai/gpt-oss-120b",
+            max_tokens=2048,
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -1250,33 +1251,38 @@ elif st.session_state.etapa == "App":
     elif st.session_state.pagina == "Distribuicao":
         st.header("🧮 Distribuição Calórica Inteligente")
 
-        culinaria = st.selectbox("🍽️ Culinária:", [
-            "🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa",
-            "🇮🇹 Italiana","🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"])
-
-        n_refeicoes = st.selectbox("🍴 Quantas refeições por dia?", [
-            "2 refeições","3 refeições","4 refeições","5 refeições","6 refeições"])
-
-        kcal = st.number_input("🔥 Quantas calorias por dia?",
-            min_value=800, max_value=5000, value=1500, step=100)
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            culinaria = st.selectbox("🍽️ Culinária:", [
+                "🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa",
+                "🇮🇹 Italiana","🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"])
+        with col2:
+            n_refeicoes = st.selectbox("🍴 Refeições por dia:", [
+                "2","3","4","5","6"])
+        with col3:
+            kcal = st.number_input("🔥 Calorias por dia:",
+                min_value=800, max_value=5000, value=1500, step=100)
 
         if st.button("🤖 GERAR MEU PLANO", use_container_width=True):
+            kcal_por_ref = int(kcal) // int(n_refeicoes)
             prompt = (
-                f"Crie um plano alimentar completo para {n_refeicoes} por dia.\n"
-                f"Total: {int(kcal)} kcal/dia. Culinária: {culinaria}.\n\n"
-                f"Para cada refeição, escreva:\n"
-                f"**[Nome da refeição]** — [X] kcal\n"
-                f"Prato: [nome do prato]\n"
-                f"Ingredientes: [lista rápida]\n"
-                f"Preparo: [2 linhas]\n\n"
-                f"No final, mostre o total de calorias, proteínas, carboidratos e gorduras.\n"
-                f"Seja direto, prático e em português brasileiro."
+                f"Crie um plano alimentar para {n_refeicoes} refeições, {int(kcal)} kcal/dia, culinária {culinaria}.\n"
+                f"Cada refeição tem aproximadamente {kcal_por_ref} kcal.\n\n"
+                f"FORMATO OBRIGATÓRIO para cada refeição:\n"
+                f"**Refeição X — Nome** (X kcal)\n"
+                f"- Prato: [nome]\n"
+                f"- Ingredientes: [lista]\n"
+                f"- Preparo: [máximo 2 linhas]\n\n"
+                f"Ao final: **Totais do dia** em tabela simples (calorias, proteína, carb, gordura).\n"
+                f"Seja objetivo. Português brasileiro."
             )
-            with st.spinner("Gerando seu plano..."):
+            with st.spinner(f"Gerando plano com {n_refeicoes} refeições..."):
                 res = nutri_ia(prompt)
+            st.markdown("---")
             st.markdown(res)
             st.download_button("📋 Baixar plano", data=res,
-                file_name="plano_calorico.txt", mime="text/plain")
+                file_name="plano_calorico.txt", mime="text/plain",
+                use_container_width=True)
 
     elif st.session_state.pagina == "NutricaoInt":
         st.header("🥗 Nutrição Inteligente")
