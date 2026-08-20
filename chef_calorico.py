@@ -1256,11 +1256,11 @@ elif st.session_state.etapa == "App":
 
         c1, c2, c3 = st.columns(3)
         with c1:
-            cul = st.selectbox("🍽️ Culinária", ["🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa","🇮🇹 Italiana","🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"])
+            cul = st.selectbox("🍽️ Culinária", ["🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa","🇮🇹 Italiana","🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"], key="dist_cul")
         with c2:
-            nref = st.selectbox("🍴 Refeições", ["2","3","4","5","6"])
+            nref = st.selectbox("🍴 Refeições", ["2","3","4","5","6"], key="dist_nref")
         with c3:
-            kcal = st.number_input("🔥 Calorias/dia", min_value=800, max_value=5000, value=1500, step=100)
+            kcal = st.number_input("🔥 Calorias/dia", min_value=800, max_value=5000, value=1500, step=100, key="dist_kcal")
 
         if st.button("🤖 GERAR PLANO", use_container_width=True):
             with st.spinner("Gerando..."):
