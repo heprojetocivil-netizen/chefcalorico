@@ -206,15 +206,15 @@ def nutri_ia(prompt, system_extra=""):
     try:
         client = Groq(api_key=st.session_state.api_key)
         perfil = (
-            f"Usuário: {st.session_state.usuario}. "
-            f"Objetivo: {st.session_state.objetivo}. "
-            f"Meta calórica: {st.session_state.calorias_padrao} kcal. "
-            f"Proteína: {st.session_state.proteina_meta}g. "
-            f"Estilo: {st.session_state.estilo_alimentar}. "
-            f"Restrições: {st.session_state.restricoes or 'nenhuma'}. "
-            f"Alergias: {st.session_state.alergias or 'nenhuma'}. "
-            f"Culinária favorita: {st.session_state.culinaria_favorita}. "
-            f"IMC: {calcular_imc()}. Nível de atividade: {st.session_state.nivel_atividade}."
+            f"Usuário: {st.session_state.get('usuario','Usuário')}. "
+            f"Objetivo: {st.session_state.get('objetivo','Manter peso')}. "
+            f"Meta calórica: {st.session_state.get('calorias_padrao',2000)} kcal. "
+            f"Proteína: {st.session_state.get('proteina_meta',50)}g. "
+            f"Estilo: {st.session_state.get('estilo_alimentar','Brasileira')}. "
+            f"Restrições: {st.session_state.get('restricoes','nenhuma') or 'nenhuma'}. "
+            f"Alergias: {st.session_state.get('alergias','nenhuma') or 'nenhuma'}. "
+            f"Culinária favorita: {st.session_state.get('culinaria_favorita','Brasileira')}. "
+            f"IMC: {calcular_imc()}. Nível de atividade: {st.session_state.get('nivel_atividade','Moderado')}."
         )
         system = (
             f"Você é o NutriMind AI — nutricionista, chef e coach de hábitos alimentares em um só lugar. "
@@ -1249,115 +1249,138 @@ elif st.session_state.etapa == "App":
     # ──────────────────────────────────────────
     elif st.session_state.pagina == "Distribuicao":
         st.header("🧮 Distribuição Calórica Inteligente")
-        st.markdown("Monte seu plano alimentar controlando exatamente quantas calorias em cada refeição.")
+        st.markdown("Configure sua meta, escolha as refeições e gere seu plano personalizado.")
 
-        # Defaults
-        for k,v in [('dist_kcal',1500),('dist_obj','Emagrecer'),
-            ('dist_refeicoes',['☕ Café da manhã','🍽️ Almoço','🌙 Jantar']),
-            ('dist_estilo','🇧🇷 Brasileira'),('dist_nao_gosta',''),
-            ('dist_resultado',None)]:
-            if k not in st.session_state: st.session_state[k] = v
+        # Defaults no session_state
+        defs = {
+            'dc_kcal': 1500, 'dc_obj': 'Emagrecer',
+            'dc_est': '🇧🇷 Brasileira',
+            'dc_refs': ['☕ Café da manhã','🍽️ Almoço','🌙 Jantar'],
+            'dc_ng': '', 'dc_np': '', 'dc_resultado': ''
+        }
+        for k,v in defs.items():
+            if k not in st.session_state:
+                st.session_state[k] = v
 
-        # ── CONFIGURAÇÕES ──
         st.markdown("### ⚙️ Configure seu plano")
         col1, col2 = st.columns(2)
         with col1:
-            kcal = st.number_input("🔥 Calorias por dia:", min_value=800, max_value=5000,
-                value=int(st.session_state.dist_kcal), step=50, key="dc_kcal")
-            obj  = st.selectbox("🎯 Objetivo:", ["Emagrecer","Manter peso","Ganhar massa","Melhorar alimentação"], key="dc_obj")
-            est  = st.selectbox("🍽️ Culinária:", ["🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa",
-                "🇮🇹 Italiana","🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"], key="dc_est")
+            st.session_state.dc_kcal = st.number_input(
+                "🔥 Calorias por dia:", min_value=800, max_value=5000,
+                value=int(st.session_state.dc_kcal), step=50)
+            st.session_state.dc_obj = st.selectbox(
+                "🎯 Objetivo:",
+                ["Emagrecer","Manter peso","Ganhar massa","Melhorar alimentação"],
+                index=["Emagrecer","Manter peso","Ganhar massa","Melhorar alimentação"].index(
+                    st.session_state.dc_obj))
+            st.session_state.dc_est = st.selectbox(
+                "🍽️ Culinária:",
+                ["🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa","🇮🇹 Italiana",
+                 "🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"],
+                index=["🇧🇷 Brasileira","🌵 Nordestina","🇯🇵 Japonesa","🇮🇹 Italiana",
+                       "🥗 Saudável","🌱 Vegetariana","🍖 Carnívora"].index(
+                    st.session_state.dc_est))
         with col2:
             todas_ref = ["☕ Café da manhã","🍎 Lanche da manhã","🍽️ Almoço",
                          "🥪 Lanche da tarde","🌙 Jantar","🌙 Ceia"]
-            refs = st.multiselect("🍴 Refeições:", todas_ref,
-                default=["☕ Café da manhã","🍽️ Almoço","🌙 Jantar"], key="dc_refs")
-            nao_gosta  = st.text_input("🚫 Não gosta de:", placeholder="ex: brócolis, fígado...", key="dc_ng")
-            nao_pode   = st.text_input("⚠️ Não pode comer:", placeholder="ex: glúten, lactose...", key="dc_np")
+            refs_widget = st.multiselect(
+                "🍴 Refeições:", todas_ref,
+                default=st.session_state.dc_refs)
+            if refs_widget:
+                st.session_state.dc_refs = refs_widget
+            st.session_state.dc_ng = st.text_input(
+                "🚫 Não gosta de:", value=st.session_state.dc_ng,
+                placeholder="ex: brócolis, fígado...")
+            st.session_state.dc_np = st.text_input(
+                "⚠️ Não pode comer:", value=st.session_state.dc_np,
+                placeholder="ex: glúten, lactose...")
 
-        # Garante refs nunca vazio
-        if not refs:
-            refs = ["☕ Café da manhã","🍽️ Almoço","🌙 Jantar"]
+        # Ler do session_state (sempre atualizado)
+        kcal = st.session_state.dc_kcal
+        obj  = st.session_state.dc_obj
+        est  = st.session_state.dc_est
+        refs = st.session_state.dc_refs or ["☕ Café da manhã","🍽️ Almoço","🌙 Jantar"]
+        ng   = st.session_state.dc_ng
+        np_  = st.session_state.dc_np
 
-        # ── DISTRIBUIÇÃO AUTOMÁTICA ──
+        # Calcular distribuição
         pcts_padrao = {
-            "Emagrecer":     {"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":35,"🥪 Lanche da tarde":5,"🌙 Jantar":25,"🌙 Ceia":5},
-            "Ganhar massa":  {"☕ Café da manhã":25,"🍎 Lanche da manhã":15,"🍽️ Almoço":30,"🥪 Lanche da tarde":15,"🌙 Jantar":25,"🌙 Ceia":10},
-            "Manter peso":   {"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":30,"🥪 Lanche da tarde":10,"🌙 Jantar":25,"🌙 Ceia":5},
-            "Melhorar alimentação": {"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":30,"🥪 Lanche da tarde":10,"🌙 Jantar":25,"🌙 Ceia":5},
+            "Emagrecer":    {"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":35,"🥪 Lanche da tarde":5,"🌙 Jantar":25,"🌙 Ceia":5},
+            "Ganhar massa": {"☕ Café da manhã":25,"🍎 Lanche da manhã":15,"🍽️ Almoço":30,"🥪 Lanche da tarde":15,"🌙 Jantar":25,"🌙 Ceia":10},
+            "Manter peso":  {"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":30,"🥪 Lanche da tarde":10,"🌙 Jantar":25,"🌙 Ceia":5},
+            "Melhorar alimentação":{"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":30,"🥪 Lanche da tarde":10,"🌙 Jantar":25,"🌙 Ceia":5},
         }
         base = pcts_padrao.get(obj, pcts_padrao["Manter peso"])
-        pcts_sel = {r: base.get(r,15) for r in refs}
+        pcts_sel = {r: base.get(r, 15) for r in refs}
         total_b  = sum(pcts_sel.values())
         pcts_norm = {r: round(v/total_b*100) for r,v in pcts_sel.items()}
-        # Corrigir para somar 100
         diff_c = 100 - sum(pcts_norm.values())
         if diff_c and pcts_norm:
-            maior = max(pcts_norm, key=pcts_norm.get)
-            pcts_norm[maior] += diff_c
+            pcts_norm[max(pcts_norm, key=pcts_norm.get)] += diff_c
 
-        # ── TABELA VISUAL ──
+        # Tabela
         st.markdown("### 📊 Distribuição para hoje")
         for ref in refs:
-            pct = pcts_norm.get(ref,0)
+            pct = pcts_norm.get(ref, 0)
             cal = round(kcal * pct / 100)
-            col_r, col_p, col_c, col_b = st.columns([3,1,1,4])
-            col_r.markdown(f"**{ref}**")
-            col_p.markdown(f"**{pct}%**")
-            col_c.markdown(f"*{cal} kcal*")
-            col_b.progress(pct/100)
+            c1, c2, c3, c4 = st.columns([3,1,1,4])
+            c1.markdown(f"**{ref}**")
+            c2.markdown(f"**{pct}%**")
+            c3.markdown(f"*{cal} kcal*")
+            c4.progress(pct/100)
+        st.markdown(f"**Total: {sum(pcts_norm.values())}% = {int(kcal)} kcal ✅**")
 
-        st.markdown(f"**Total: {sum(pcts_norm.values())}% = {kcal} kcal ✅**")
-
-        # ── BOTÃO GERAR ──
         st.markdown("---")
-        if st.button("🤖 CRIAR MEU PLANO ALIMENTAR PERSONALIZADO", use_container_width=True, key="dc_gerar"):
+        if st.button("🤖 CRIAR MEU PLANO ALIMENTAR PERSONALIZADO",
+                     use_container_width=True, key="dc_gerar"):
+            st.session_state.dc_resultado = ''  # limpar resultado anterior
             refeicoes_desc = "\n".join(
-                f"- {r}: {round(kcal * pcts_norm.get(r,0) / 100)} kcal ({pcts_norm.get(r,0)}%)"
-                for r in refs
-            )
+                f"- {r}: {round(kcal * pcts_norm.get(r,0)/100)} kcal ({pcts_norm.get(r,0)}%)"
+                for r in refs)
             prompt = (
                 f"Monte um plano alimentar completo para 1 dia.\n\n"
-                f"META: {kcal} kcal/dia | Objetivo: {obj} | Culinária: {est}\n"
-                f"Não gosta: {nao_gosta or 'nenhum'} | Não pode: {nao_pode or 'nenhum'}\n\n"
-                f"DISTRIBUIÇÃO (respeite exatamente):\n{refeicoes_desc}\n\n"
-                f"FORMATO:\n"
-                f"Para cada refeição:\n"
-                f"[EMOJI] [REFEIÇÃO] — [X] kcal\n"
-                f"**[Nome do prato]**\n"
-                f"Ingredientes: [lista simples]\n"
-                f"Preparo: [2-3 linhas práticas]\n\n"
-                f"Ao final: tabela resumo com total de proteínas, carboidratos e gorduras.\n"
-                f"Escreva em português brasileiro, seja prático e específico."
+                f"META: {int(kcal)} kcal/dia | Objetivo: {obj} | Culinária: {est}\n"
+                f"Não gosta: {ng or 'nenhum'} | Não pode comer: {np_ or 'nenhum'}\n\n"
+                f"DISTRIBUIÇÃO CALÓRICA (respeite exatamente):\n{refeicoes_desc}\n\n"
+                f"Para cada refeição escreva:\n"
+                f"[EMOJI] [NOME DA REFEIÇÃO] — [X] kcal\n"
+                f"**Nome do prato**\n"
+                f"Ingredientes: [lista]\n"
+                f"Preparo: [2-3 linhas]\n\n"
+                f"No final, tabela com totais de proteína, carboidrato e gordura.\n"
+                f"Português brasileiro. Seja específico e prático."
             )
-            with st.spinner("A IA está montando seu plano..."):
+            with st.spinner("🍽️ A IA está montando seu plano..."):
                 res = nutri_ia(prompt)
-                salvar_receita("Plano Calórico", f"{kcal} kcal — {obj}", res)
-                st.session_state.xp_total = st.session_state.get('xp_total',0) + 20
-                st.session_state['dist_resultado'] = res
+            st.session_state.dc_resultado = res
+            salvar_receita("Plano Calórico", f"{int(kcal)} kcal — {obj}", res)
+            st.session_state.xp_total = st.session_state.get('xp_total', 0) + 20
 
-        if st.session_state.get('dist_resultado'):
+        if st.session_state.get('dc_resultado'):
             st.markdown("""
             <div style='background:linear-gradient(135deg,#FFF7ED,#FFEDD5);
-            border:2px solid #FDBA74;border-radius:16px;padding:6px 20px;margin:12px 0;'>
-            <div style='font-size:0.8em;font-weight:700;color:#C2410C;'>
-            🍽️ SEU PLANO ALIMENTAR PERSONALIZADO</div></div>
+            border:2px solid #FDBA74;border-radius:16px;padding:8px 20px;margin:16px 0 8px;'>
+            <span style='font-size:0.85em;font-weight:700;color:#C2410C;'>
+            🍽️ SEU PLANO ALIMENTAR PERSONALIZADO</span></div>
             """, unsafe_allow_html=True)
-            st.markdown(st.session_state['dist_resultado'])
+            st.markdown(st.session_state.dc_resultado)
             col_dl, col_sv = st.columns(2)
             with col_dl:
                 st.download_button("📋 Baixar (.txt)",
-                    data=st.session_state['dist_resultado'],
+                    data=st.session_state.dc_resultado,
                     file_name="plano_calorico.txt",
                     mime="text/plain", use_container_width=True)
             with col_sv:
-                if st.button("❤️ Salvar", key="sv_dist", use_container_width=True):
+                if st.button("❤️ Salvar na biblioteca", key="dc_salvar",
+                             use_container_width=True):
                     st.session_state.receitas_salvas.append({
                         'tipo': 'Plano Calórico',
-                        'nome': f"{kcal} kcal — {obj}",
-                        'conteudo': st.session_state['dist_resultado'],
+                        'nome': f"{int(kcal)} kcal — {obj}",
+                        'conteudo': st.session_state.dc_resultado,
+                        'data': datetime.now().strftime('%d/%m %H:%M'),
+                        'favorito': False,
                     })
-                    st.success("Salvo!")
+                    st.success("✅ Salvo na biblioteca!")
 
     elif st.session_state.pagina == "NutricaoInt":
         st.header("🥗 Nutrição Inteligente")
