@@ -1274,8 +1274,11 @@ elif st.session_state.etapa == "App":
             todas_ref = ["☕ Café da manhã","🍎 Lanche da manhã","🍽️ Almoço",
                          "🥪 Lanche da tarde","🌙 Jantar","🌙 Ceia"]
             refs_sel = st.multiselect("🍴 Refeições do dia:", todas_ref,
-                default=st.session_state.dist_refeicoes)
-            st.session_state.dist_refeicoes = refs_sel
+                default=st.session_state.dist_refeicoes or ["☕ Café da manhã","🍽️ Almoço","🌙 Jantar"])
+            if refs_sel:
+                st.session_state.dist_refeicoes = refs_sel
+            else:
+                refs_sel = st.session_state.dist_refeicoes or ["☕ Café da manhã","🍽️ Almoço","🌙 Jantar"]
 
         # ── ETAPA 2: MODO ──
         st.markdown("### 2️⃣ Como distribuir as calorias?")
@@ -1404,7 +1407,16 @@ elif st.session_state.etapa == "App":
         # ── ETAPA 5: GERAR ──
         st.markdown("### 5️⃣ Criar Meu Plano Alimentar")
         if st.button("🤖 CRIAR MEU PLANO ALIMENTAR PERSONALIZADO", use_container_width=True):
-            if refs_sel and st.session_state.dist_pcts:
+            if refs_sel:
+                # Garante que pcts_finais existe mesmo que dist_pcts não tenha sido salvo
+                if st.session_state.dist_pcts:
+                    pcts_finais = st.session_state.dist_pcts
+                else:
+                    # Calcula automaticamente
+                    pcts_base = {"☕ Café da manhã":20,"🍎 Lanche da manhã":10,"🍽️ Almoço":35,"🥪 Lanche da tarde":10,"🌙 Jantar":20,"🌙 Ceia":5}
+                    pcts_sel = {r: pcts_base.get(r, 15) for r in refs_sel}
+                    total_b = sum(pcts_sel.values())
+                    pcts_finais = {r: round(v/total_b*100) for r,v in pcts_sel.items()}
                 with st.spinner("A IA está montando seu plano..."):
                     # Monta descrição das refeições com calorias
                     pcts_finais = st.session_state.dist_pcts
