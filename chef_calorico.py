@@ -1294,7 +1294,9 @@ elif st.session_state.etapa == "App":
                 f"Gere TODAS as {nref_val} refeições. Seja breve. Português brasileiro."
             )
             with st.spinner(f"Gerando plano {cul_val} com {nref_val} refeições e {kcal_val} kcal..."):
-                res = nutri_ia(prompt)
+                res = nutri_ia(prompt,
+                    system_extra=f"ATENÇÃO: para este plano use EXATAMENTE {kcal_val} kcal/dia divididas em {nref_val} refeições. Ignore qualquer outra meta calórica."
+                )
             st.session_state.dist_res = res
 
         if st.session_state.get("dist_res"):
