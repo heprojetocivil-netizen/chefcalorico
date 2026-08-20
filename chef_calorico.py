@@ -1289,10 +1289,16 @@ elif st.session_state.etapa == "App":
 
         pcts = {}
         usado = 0
+        erro_dist = False
         for i, ref in enumerate(lista[:-1]):
-            reserva = n - 1 - i  # 1% mínimo para cada refeição restante
-            max_val = 100 - usado - reserva
-            max_val = max(max_val, 1)
+            reserva = n - 1 - i
+            max_val = max(100 - usado - reserva, 1)
+            key = f"dist_s_{nref_val}_{i}"
+
+            # Se o valor salvo no session_state excede o max, resetar
+            if key in st.session_state and st.session_state[key] > max_val:
+                st.session_state[key] = max_val
+
             def_val = min(defaults_pct.get(ref, 20), max_val)
 
             pct = st.slider(
@@ -1301,7 +1307,7 @@ elif st.session_state.etapa == "App":
                 max_value=max_val,
                 value=def_val,
                 format="%d%%",
-                key=f"dist_s_{nref_val}_{i}"
+                key=key
             )
             kcal_ref = round(kcal_val * pct / 100)
             st.markdown(
