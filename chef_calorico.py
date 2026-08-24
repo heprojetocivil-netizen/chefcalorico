@@ -82,6 +82,26 @@ st.markdown("""
 
     .chat-scroll-container { max-height:40vh; overflow-y:auto; display:flex; flex-direction:column; scroll-behavior:smooth; padding-bottom:4px; }
     .chat-scroll-container > * { flex-shrink:0; }
+    
+    /* Navbar horizontal no mobile — só aplica em telas pequenas */
+    @media (max-width: 640px) {
+        [data-testid="stHorizontalBlock"] {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            gap: 4px !important;
+            -webkit-overflow-scrolling: touch;
+        }
+        [data-testid="stHorizontalBlock"] > div {
+            min-width: 44px !important;
+            flex: 0 0 auto !important;
+        }
+        [data-testid="stHorizontalBlock"] .stButton > button {
+            min-width: 44px !important;
+            padding: 8px 4px !important;
+            font-size: 17px !important;
+        }
+    }
+
     </style>
 """, unsafe_allow_html=True)
 
