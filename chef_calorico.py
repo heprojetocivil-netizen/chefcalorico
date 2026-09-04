@@ -83,24 +83,6 @@ st.markdown("""
     .chat-scroll-container { max-height:40vh; overflow-y:auto; display:flex; flex-direction:column; scroll-behavior:smooth; padding-bottom:4px; }
     .chat-scroll-container > * { flex-shrink:0; }
     
-    /* Navbar horizontal no mobile — só aplica em telas pequenas */
-    @media (max-width: 640px) {
-        [data-testid="stHorizontalBlock"] {
-            flex-wrap: nowrap !important;
-            overflow-x: auto !important;
-            gap: 4px !important;
-            -webkit-overflow-scrolling: touch;
-        }
-        [data-testid="stHorizontalBlock"] > div {
-            min-width: 44px !important;
-            flex: 0 0 auto !important;
-        }
-        [data-testid="stHorizontalBlock"] .stButton > button {
-            min-width: 44px !important;
-            padding: 8px 4px !important;
-            font-size: 17px !important;
-        }
-    }
 
     </style>
 """, unsafe_allow_html=True)
@@ -343,33 +325,15 @@ elif st.session_state.etapa == "App":
 
     barra_salvar()
 
-    # NAVBAR linha 1
-    cols1 = st.columns(9)
-    nav1 = [("🏠","Home"),("📋","Perfil"),("🍽️","DiaCompleto"),("📅","Planejamento"),
-            ("👨‍🍳","Chef"),("🛒","Compras"),("🌍","Culinarias"),("❤️","Favoritos"),("📊","Evolucao")]
-    lb1 = {"Home":"Painel Principal","Perfil":"Meu Perfil Nutricional","DiaCompleto":"Plano do Dia",
-           "Planejamento":"Planejamento 7-90 dias","Chef":"Chef IA — Versão Saudável",
-           "Compras":"Lista de Compras Inteligente","Culinarias":"Descobrir Culinárias",
-           "Favoritos":"Receitas Favoritas","Evolucao":"Evolução e Progresso"}
-    for i,(ic,pg) in enumerate(nav1):
-        if cols1[i].button(ic, key=f"nav1_{pg}", help=lb1[pg]):
-            st.session_state.pagina = pg; st.rerun()
-
-    # NAVBAR linha 2
-    cols2 = st.columns(11)
-    nav2 = [("💬","Nutricionista"),("🏃","Fitness"),("🏆","Desafios"),("🎖️","Conquistas"),
-            ("📷","FotoPrato"),("🏪","Restaurante"),("🧠","IAPreventiva"),("📖","Historico"),("❤️2","Salvos"),
-            ("🧮","Distribuicao"),("🥗","NutricaoInt")]
-    lb2 = {"Nutricionista":"Nutricionista IA","Fitness":"Área Fitness","Desafios":"Desafios Nutricionais",
-           "Conquistas":"Minhas Conquistas","FotoPrato":"Analisar Foto do Prato",
-           "Restaurante":"Assistente de Restaurante","IAPreventiva":"IA Preventiva e Coach",
-           "Historico":"Histórico de Cardápios","Salvos":"Receitas Salvas",
-           "Distribuicao":"Distribuição Calórica Inteligente","NutricaoInt":"Nutrição Inteligente"}
-    for i,(ic,pg) in enumerate(nav2):
-        ch = list(lb2.keys())[i]
-        if cols2[i].button(ic, key=f"nav2_{ch}", help=lb2[ch]):
-            st.session_state.pagina = ch; st.rerun()
-
+    # NAVBAR — menu suspenso
+    _nav_opcoes = ['🏠  Painel Principal', '📋  Meu Perfil Nutricional', '🍽️  Plano do Dia', '📅  Planejamento 7-90 dias', '👨\u200d🍳  Chef IA — Versão Saudável', '🛒  Lista de Compras Inteligente', '🌍  Descobrir Culinárias', '❤️  Receitas Favoritas', '📊  Evolução e Progresso', '💬  Nutricionista IA', '🏃  Área Fitness', '🏆  Desafios Nutricionais', '🎖️  Minhas Conquistas', '📷  Analisar Foto do Prato', '🏪  Assistente de Restaurante', '🧠  IA Preventiva e Coach', '📖  Histórico de Cardápios', '❤️2  Receitas Salvas', '🧮  Distribuição Calórica Inteligente', '🥗  Nutrição Inteligente']
+    _nav_paginas = ['Home', 'Perfil', 'DiaCompleto', 'Planejamento', 'Chef', 'Compras', 'Culinarias', 'Favoritos', 'Evolucao', 'Nutricionista', 'Fitness', 'Desafios', 'Conquistas', 'FotoPrato', 'Restaurante', 'IAPreventiva', 'Historico', 'Salvos', 'Distribuicao', 'NutricaoInt']
+    _nav_sel = st.selectbox("📍 Navegar para:", _nav_opcoes,
+        index=_nav_paginas.index(st.session_state.pagina) if st.session_state.pagina in _nav_paginas else 0,
+        key="nav_dropdown", label_visibility="collapsed")
+    _pg_sel = _nav_paginas[_nav_opcoes.index(_nav_sel)]
+    if _pg_sel != st.session_state.pagina:
+        st.session_state.pagina = _pg_sel; st.rerun()
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
 
     # ──────────────────────────────────────────
