@@ -325,15 +325,25 @@ elif st.session_state.etapa == "App":
 
     barra_salvar()
 
-    # NAVBAR — menu suspenso
-    _nav_opcoes = ['🏠  Painel Principal', '📋  Meu Perfil Nutricional', '🍽️  Plano do Dia', '📅  Planejamento 7-90 dias', '👨\u200d🍳  Chef IA — Versão Saudável', '🛒  Lista de Compras Inteligente', '🌍  Descobrir Culinárias', '❤️  Receitas Favoritas', '📊  Evolução e Progresso', '💬  Nutricionista IA', '🏃  Área Fitness', '🏆  Desafios Nutricionais', '🎖️  Minhas Conquistas', '📷  Analisar Foto do Prato', '🏪  Assistente de Restaurante', '🧠  IA Preventiva e Coach', '📖  Histórico de Cardápios', '❤️2  Receitas Salvas', '🧮  Distribuição Calórica Inteligente', '🥗  Nutrição Inteligente']
-    _nav_paginas = ['Home', 'Perfil', 'DiaCompleto', 'Planejamento', 'Chef', 'Compras', 'Culinarias', 'Favoritos', 'Evolucao', 'Nutricionista', 'Fitness', 'Desafios', 'Conquistas', 'FotoPrato', 'Restaurante', 'IAPreventiva', 'Historico', 'Salvos', 'Distribuicao', 'NutricaoInt']
-    _nav_sel = st.selectbox("📍 Navegar para:", _nav_opcoes,
-        index=_nav_paginas.index(st.session_state.pagina) if st.session_state.pagina in _nav_paginas else 0,
-        key="nav_dropdown", label_visibility="collapsed")
-    _pg_sel = _nav_paginas[_nav_opcoes.index(_nav_sel)]
-    if _pg_sel != st.session_state.pagina:
-        st.session_state.pagina = _pg_sel; st.rerun()
+    # NAVBAR — botões compactos
+    _cols1 = st.columns(7)
+    _nav1 = [("🏠","Home"), ("📋","Perfil"), ("🍽️","DiaCompleto"), ("📅","Planejamento"), ("👨‍🍳","Chef"), ("🛒","Compras"), ("🌍","Culinarias")]
+    _lb1 = {"Home": "Painel Principal", "Perfil": "Meu Perfil Nutricional", "DiaCompleto": "Plano do Dia", "Planejamento": "Planejamento 7-90 dias", "Chef": "Chef IA — Versão Saudável", "Compras": "Lista de Compras Inteligente", "Culinarias": "Descobrir Culinárias"}
+    for _i1,(_ic1,_pg1) in enumerate(_nav1):
+        if _cols1[_i1].button(_ic1, key=f"nav1_{_pg1}", help=_lb1[_pg1], use_container_width=True):
+            st.session_state.pagina = _pg1; st.rerun()
+    _cols2 = st.columns(7)
+    _nav2 = [("❤️","Favoritos"), ("📊","Evolucao"), ("💬","Nutricionista"), ("🏃","Fitness"), ("🏆","Desafios"), ("🎖️","Conquistas"), ("📷","FotoPrato")]
+    _lb2 = {"Favoritos": "Receitas Favoritas", "Evolucao": "Evolução e Progresso", "Nutricionista": "Nutricionista IA", "Fitness": "Área Fitness", "Desafios": "Desafios Nutricionais", "Conquistas": "Minhas Conquistas", "FotoPrato": "Analisar Foto do Prato"}
+    for _i2,(_ic2,_pg2) in enumerate(_nav2):
+        if _cols2[_i2].button(_ic2, key=f"nav2_{_pg2}", help=_lb2[_pg2], use_container_width=True):
+            st.session_state.pagina = _pg2; st.rerun()
+    _cols3 = st.columns(6)
+    _nav3 = [("🏪","Restaurante"), ("🧠","IAPreventiva"), ("📖","Historico"), ("❤️2","Salvos"), ("🧮","Distribuicao"), ("🥗","NutricaoInt")]
+    _lb3 = {"Restaurante": "Assistente de Restaurante", "IAPreventiva": "IA Preventiva e Coach", "Historico": "Histórico de Cardápios", "Salvos": "Receitas Salvas", "Distribuicao": "Distribuição Calórica Inteligente", "NutricaoInt": "Nutrição Inteligente"}
+    for _i3,(_ic3,_pg3) in enumerate(_nav3):
+        if _cols3[_i3].button(_ic3, key=f"nav3_{_pg3}", help=_lb3[_pg3], use_container_width=True):
+            st.session_state.pagina = _pg3; st.rerun()
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
 
     # ──────────────────────────────────────────
