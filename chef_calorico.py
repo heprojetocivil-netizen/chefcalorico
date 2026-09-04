@@ -258,8 +258,7 @@ def barra_salvar():
 # LOGIN
 # ============================================================
 if st.session_state.etapa == "Login":
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
+    with st.container():
         st.title("🍽️ NutriMind AI")
         st.markdown("**Seu nutricionista pessoal, chef e planejador alimentar em um só lugar.**")
         st.markdown("*Comer bem nunca foi tão simples.*")
