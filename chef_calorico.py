@@ -324,25 +324,27 @@ elif st.session_state.etapa == "App":
 
     barra_salvar()
 
-    # NAVBAR — botões compactos
-    _cols1 = st.columns(7)
-    _nav1 = [("🏠","Home"), ("📋","Perfil"), ("🍽️","DiaCompleto"), ("📅","Planejamento"), ("👨‍🍳","Chef"), ("🛒","Compras"), ("🌍","Culinarias")]
-    _lb1 = {"Home": "Painel Principal", "Perfil": "Meu Perfil Nutricional", "DiaCompleto": "Plano do Dia", "Planejamento": "Planejamento 7-90 dias", "Chef": "Chef IA — Versão Saudável", "Compras": "Lista de Compras Inteligente", "Culinarias": "Descobrir Culinárias"}
-    for _i1,(_ic1,_pg1) in enumerate(_nav1):
-        if _cols1[_i1].button(_ic1, key=f"nav1_{_pg1}", help=_lb1[_pg1], use_container_width=True):
+    # NAVBAR — botões 4 por linha
+    _c1 = st.columns(4)
+    for _i1,(_ic1,_pg1) in enumerate([('🏠', 'Home'), ('📋', 'Perfil'), ('🍽️', 'DiaCompleto'), ('📅', 'Planejamento')]):
+        if _c1[_i1].button(_ic1, key=f"nb1_{_pg1}", help={'Home': 'Painel Principal', 'Perfil': 'Meu Perfil Nutricional', 'DiaCompleto': 'Plano do Dia', 'Planejamento': 'Planejamento 7-90 dias'}[_pg1], use_container_width=True):
             st.session_state.pagina = _pg1; st.rerun()
-    _cols2 = st.columns(7)
-    _nav2 = [("❤️","Favoritos"), ("📊","Evolucao"), ("💬","Nutricionista"), ("🏃","Fitness"), ("🏆","Desafios"), ("🎖️","Conquistas"), ("📷","FotoPrato")]
-    _lb2 = {"Favoritos": "Receitas Favoritas", "Evolucao": "Evolução e Progresso", "Nutricionista": "Nutricionista IA", "Fitness": "Área Fitness", "Desafios": "Desafios Nutricionais", "Conquistas": "Minhas Conquistas", "FotoPrato": "Analisar Foto do Prato"}
-    for _i2,(_ic2,_pg2) in enumerate(_nav2):
-        if _cols2[_i2].button(_ic2, key=f"nav2_{_pg2}", help=_lb2[_pg2], use_container_width=True):
+    _c2 = st.columns(4)
+    for _i2,(_ic2,_pg2) in enumerate([('👨\u200d🍳', 'Chef'), ('🛒', 'Compras'), ('🌍', 'Culinarias'), ('❤️', 'Favoritos')]):
+        if _c2[_i2].button(_ic2, key=f"nb2_{_pg2}", help={'Chef': 'Chef IA — Versão Saudável', 'Compras': 'Lista de Compras Inteligente', 'Culinarias': 'Descobrir Culinárias', 'Favoritos': 'Receitas Favoritas'}[_pg2], use_container_width=True):
             st.session_state.pagina = _pg2; st.rerun()
-    _cols3 = st.columns(6)
-    _nav3 = [("🏪","Restaurante"), ("🧠","IAPreventiva"), ("📖","Historico"), ("❤️2","Salvos"), ("🧮","Distribuicao"), ("🥗","NutricaoInt")]
-    _lb3 = {"Restaurante": "Assistente de Restaurante", "IAPreventiva": "IA Preventiva e Coach", "Historico": "Histórico de Cardápios", "Salvos": "Receitas Salvas", "Distribuicao": "Distribuição Calórica Inteligente", "NutricaoInt": "Nutrição Inteligente"}
-    for _i3,(_ic3,_pg3) in enumerate(_nav3):
-        if _cols3[_i3].button(_ic3, key=f"nav3_{_pg3}", help=_lb3[_pg3], use_container_width=True):
+    _c3 = st.columns(4)
+    for _i3,(_ic3,_pg3) in enumerate([('📊', 'Evolucao'), ('💬', 'Nutricionista'), ('🏃', 'Fitness'), ('🏆', 'Desafios')]):
+        if _c3[_i3].button(_ic3, key=f"nb3_{_pg3}", help={'Evolucao': 'Evolução e Progresso', 'Nutricionista': 'Nutricionista IA', 'Fitness': 'Área Fitness', 'Desafios': 'Desafios Nutricionais'}[_pg3], use_container_width=True):
             st.session_state.pagina = _pg3; st.rerun()
+    _c4 = st.columns(4)
+    for _i4,(_ic4,_pg4) in enumerate([('🎖️', 'Conquistas'), ('📷', 'FotoPrato'), ('🏪', 'Restaurante'), ('🧠', 'IAPreventiva')]):
+        if _c4[_i4].button(_ic4, key=f"nb4_{_pg4}", help={'Conquistas': 'Minhas Conquistas', 'FotoPrato': 'Analisar Foto do Prato', 'Restaurante': 'Assistente de Restaurante', 'IAPreventiva': 'IA Preventiva e Coach'}[_pg4], use_container_width=True):
+            st.session_state.pagina = _pg4; st.rerun()
+    _c5 = st.columns(4)
+    for _i5,(_ic5,_pg5) in enumerate([('📖', 'Historico'), ('❤️2', 'Salvos'), ('🧮', 'Distribuicao'), ('🥗', 'NutricaoInt')]):
+        if _c5[_i5].button(_ic5, key=f"nb5_{_pg5}", help={'Historico': 'Histórico de Cardápios', 'Salvos': 'Receitas Salvas', 'Distribuicao': 'Distribuição Calórica Inteligente', 'NutricaoInt': 'Nutrição Inteligente'}[_pg5], use_container_width=True):
+            st.session_state.pagina = _pg5; st.rerun()
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
 
     # ──────────────────────────────────────────
