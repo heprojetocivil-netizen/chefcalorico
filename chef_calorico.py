@@ -324,27 +324,17 @@ elif st.session_state.etapa == "App":
 
     barra_salvar()
 
-    # NAVBAR — botões 4 por linha
-    _c1 = st.columns(4)
-    for _i1,(_ic1,_pg1) in enumerate([('🏠', 'Home'), ('📋', 'Perfil'), ('🍽️', 'DiaCompleto'), ('📅', 'Planejamento')]):
-        if _c1[_i1].button(_ic1, key=f"nb1_{_pg1}", help={'Home': 'Painel Principal', 'Perfil': 'Meu Perfil Nutricional', 'DiaCompleto': 'Plano do Dia', 'Planejamento': 'Planejamento 7-90 dias'}[_pg1], use_container_width=True):
-            st.session_state.pagina = _pg1; st.rerun()
-    _c2 = st.columns(4)
-    for _i2,(_ic2,_pg2) in enumerate([('👨\u200d🍳', 'Chef'), ('🛒', 'Compras'), ('🌍', 'Culinarias'), ('❤️', 'Favoritos')]):
-        if _c2[_i2].button(_ic2, key=f"nb2_{_pg2}", help={'Chef': 'Chef IA — Versão Saudável', 'Compras': 'Lista de Compras Inteligente', 'Culinarias': 'Descobrir Culinárias', 'Favoritos': 'Receitas Favoritas'}[_pg2], use_container_width=True):
-            st.session_state.pagina = _pg2; st.rerun()
-    _c3 = st.columns(4)
-    for _i3,(_ic3,_pg3) in enumerate([('📊', 'Evolucao'), ('💬', 'Nutricionista'), ('🏃', 'Fitness'), ('🏆', 'Desafios')]):
-        if _c3[_i3].button(_ic3, key=f"nb3_{_pg3}", help={'Evolucao': 'Evolução e Progresso', 'Nutricionista': 'Nutricionista IA', 'Fitness': 'Área Fitness', 'Desafios': 'Desafios Nutricionais'}[_pg3], use_container_width=True):
-            st.session_state.pagina = _pg3; st.rerun()
-    _c4 = st.columns(4)
-    for _i4,(_ic4,_pg4) in enumerate([('🎖️', 'Conquistas'), ('📷', 'FotoPrato'), ('🏪', 'Restaurante'), ('🧠', 'IAPreventiva')]):
-        if _c4[_i4].button(_ic4, key=f"nb4_{_pg4}", help={'Conquistas': 'Minhas Conquistas', 'FotoPrato': 'Analisar Foto do Prato', 'Restaurante': 'Assistente de Restaurante', 'IAPreventiva': 'IA Preventiva e Coach'}[_pg4], use_container_width=True):
-            st.session_state.pagina = _pg4; st.rerun()
-    _c5 = st.columns(4)
-    for _i5,(_ic5,_pg5) in enumerate([('📖', 'Historico'), ('❤️2', 'Salvos'), ('🧮', 'Distribuicao'), ('🥗', 'NutricaoInt')]):
-        if _c5[_i5].button(_ic5, key=f"nb5_{_pg5}", help={'Historico': 'Histórico de Cardápios', 'Salvos': 'Receitas Salvas', 'Distribuicao': 'Distribuição Calórica Inteligente', 'NutricaoInt': 'Nutrição Inteligente'}[_pg5], use_container_width=True):
-            st.session_state.pagina = _pg5; st.rerun()
+    # NAVBAR — popover com ícones
+    _todos_nav = [("🏠","Home","Painel Principal"), ("📋","Perfil","Meu Perfil Nutricional"), ("🍽️","DiaCompleto","Plano do Dia"), ("📅","Planejamento","Planejamento 7-90 dias"), ("👨\u200d🍳","Chef","Chef IA — Versão Saudável"), ("🛒","Compras","Lista de Compras Inteligente"), ("🌍","Culinarias","Descobrir Culinárias"), ("❤️","Favoritos","Receitas Favoritas"), ("📊","Evolucao","Evolução e Progresso"), ("💬","Nutricionista","Nutricionista IA"), ("🏃","Fitness","Área Fitness"), ("🏆","Desafios","Desafios Nutricionais"), ("🎖️","Conquistas","Minhas Conquistas"), ("📷","FotoPrato","Analisar Foto do Prato"), ("🏪","Restaurante","Assistente de Restaurante"), ("🧠","IAPreventiva","IA Preventiva e Coach"), ("📖","Historico","Histórico de Cardápios"), ("❤️2","Salvos","Receitas Salvas"), ("🧮","Distribuicao","Distribuição Calórica Inteligente"), ("🥗","NutricaoInt","Nutrição Inteligente")]
+    _pg_atual = st.session_state.pagina
+    _ic_atual = next((ic for ic,pg,lb in _todos_nav if pg==_pg_atual), "🏠")
+    _lb_atual = next((lb for ic,pg,lb in _todos_nav if pg==_pg_atual), "Home")
+    with st.popover(f"{_ic_atual} {_lb_atual}  ▾", use_container_width=True):
+        _cols_pop = st.columns(4)
+        for _idx_p, (_ic_p, _pg_p, _lb_p) in enumerate(_todos_nav):
+            with _cols_pop[_idx_p % 4]:
+                if st.button(_ic_p, key=f"pop_{_pg_p}", help=_lb_p, use_container_width=True):
+                    st.session_state.pagina = _pg_p; st.rerun()
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
 
     # ──────────────────────────────────────────
