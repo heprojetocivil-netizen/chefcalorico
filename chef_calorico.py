@@ -325,14 +325,20 @@ elif st.session_state.etapa == "App":
 
     barra_salvar()
 
-    # NAVBAR — desktop: ícones | mobile: setas
+    # NAVBAR — desktop: ícones sempre visíveis | mobile: setas
+    _nav_pgs = ['Home', 'Perfil', 'DiaCompleto', 'Planejamento', 'Chef', 'Compras', 'Culinarias', 'Favoritos', 'Evolucao', 'Nutricionista', 'Fitness', 'Desafios', 'Conquistas', 'FotoPrato', 'Restaurante', 'IAPreventiva', 'Historico', 'Salvos', 'Distribuicao', 'NutricaoInt']
+    _nav_ics = ['🏠', '📋', '🍽️', '📅', '👨\u200d🍳', '🛒', '🌍', '❤️', '📊', '💬', '🏃', '🏆', '🎖️', '📷', '🏪', '🧠', '📖', '❤️2', '🧮', '🥗']
+    _nav_lbs = ['Painel Principal', 'Meu Perfil Nutricional', 'Plano do Dia', 'Planejamento 7-90 dias', 'Chef IA — Versão Saudável', 'Lista de Compras Inteligente', 'Descobrir Culinárias', 'Receitas Favoritas', 'Evolução e Progresso', 'Nutricionista IA', 'Área Fitness', 'Desafios Nutricionais', 'Minhas Conquistas', 'Analisar Foto do Prato', 'Assistente de Restaurante', 'IA Preventiva e Coach', 'Histórico de Cardápios', 'Receitas Salvas', 'Distribuição Calórica Inteligente', 'Nutrição Inteligente']
+    _nav_idx = _nav_pgs.index(st.session_state.pagina) if st.session_state.pagina in _nav_pgs else 0
+
+    # CSS: mostra ícones no desktop, setas no mobile
     st.markdown("""<style>
-    .nav-desktop{display:block;} .nav-mobile{display:none;}
-    @media(max-width:768px){.nav-desktop{display:none;} .nav-mobile{display:block;}}
+    .nb-desktop{display:block;} .nb-mobile{display:none;}
+    @media(max-width:768px){.nb-desktop{display:none!important;} .nb-mobile{display:block;}}
     </style>""", unsafe_allow_html=True)
 
-    # DESKTOP — ícones em linhas
-    st.markdown("<div class='nav-desktop'>", unsafe_allow_html=True)
+    # DESKTOP — ícones sempre visíveis
+    st.markdown("<div class='nb-desktop'>", unsafe_allow_html=True)
     _d1 = st.columns(7)
     if _d1[0].button("🏠", key="dk1_Home", help="Painel Principal", use_container_width=True): st.session_state.pagina="Home"; st.rerun()
     if _d1[1].button("📋", key="dk1_Perfil", help="Meu Perfil Nutricional", use_container_width=True): st.session_state.pagina="Perfil"; st.rerun()
@@ -358,25 +364,20 @@ elif st.session_state.etapa == "App":
     if _d3[5].button("🥗", key="dk3_NutricaoInt", help="Nutrição Inteligente", use_container_width=True): st.session_state.pagina="NutricaoInt"; st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # MOBILE — setas ← →
-    st.markdown("<div class='nav-mobile'>", unsafe_allow_html=True)
-    _nav_pgs  = ['Home', 'Perfil', 'DiaCompleto', 'Planejamento', 'Chef', 'Compras', 'Culinarias', 'Favoritos', 'Evolucao', 'Nutricionista', 'Fitness', 'Desafios', 'Conquistas', 'FotoPrato', 'Restaurante', 'IAPreventiva', 'Historico', 'Salvos', 'Distribuicao', 'NutricaoInt']
-    _nav_ics  = ['🏠', '📋', '🍽️', '📅', '👨\u200d🍳', '🛒', '🌍', '❤️', '📊', '💬', '🏃', '🏆', '🎖️', '📷', '🏪', '🧠', '📖', '❤️2', '🧮', '🥗']
-    _nav_lbs  = ['Painel Principal', 'Meu Perfil Nutricional', 'Plano do Dia', 'Planejamento 7-90 dias', 'Chef IA — Versão Saudável', 'Lista de Compras Inteligente', 'Descobrir Culinárias', 'Receitas Favoritas', 'Evolução e Progresso', 'Nutricionista IA', 'Área Fitness', 'Desafios Nutricionais', 'Minhas Conquistas', 'Analisar Foto do Prato', 'Assistente de Restaurante', 'IA Preventiva e Coach', 'Histórico de Cardápios', 'Receitas Salvas', 'Distribuição Calórica Inteligente', 'Nutrição Inteligente']
-    _nav_idx  = _nav_pgs.index(st.session_state.pagina) if st.session_state.pagina in _nav_pgs else 0
-    _col_l, _col_c, _col_r = st.columns([1, 4, 1])
-    with _col_l:
+    # MOBILE — setas
+    st.markdown("<div class='nb-mobile'>", unsafe_allow_html=True)
+    _sl, _sc, _sr = st.columns([1,4,1])
+    with _sl:
         if st.button("◀", key="nav_prev", use_container_width=True, disabled=_nav_idx==0):
-            st.session_state.pagina = _nav_pgs[_nav_idx-1]; st.rerun()
-    with _col_c:
-        st.markdown(
-            f"<div style='text-align:center;padding:8px 0;font-weight:700;font-size:1em;color:#1A1A2E;'>"
+            st.session_state.pagina=_nav_pgs[_nav_idx-1]; st.rerun()
+    with _sc:
+        st.markdown(f"<div style='text-align:center;padding:8px 0;font-weight:700;'>"
             f"{_nav_ics[_nav_idx]} {_nav_lbs[_nav_idx]}"
-            f"<br><span style='font-size:0.7em;color:#94A3B8;'>{_nav_idx+1} / {len(_nav_pgs)}</span></div>",
+            f"<br><span style='font-size:0.7em;color:#94A3B8;'>{_nav_idx+1}/{len(_nav_pgs)}</span></div>",
             unsafe_allow_html=True)
-    with _col_r:
+    with _sr:
         if st.button("▶", key="nav_next", use_container_width=True, disabled=_nav_idx==len(_nav_pgs)-1):
-            st.session_state.pagina = _nav_pgs[_nav_idx+1]; st.rerun()
+            st.session_state.pagina=_nav_pgs[_nav_idx+1]; st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
 
