@@ -253,6 +253,15 @@ def barra_salvar():
         st.download_button("💾 SALVAR DADOS (.json)", data=gerar_json(),
             file_name=f"nutrimind_{nome_u}.json", mime="application/json", use_container_width=True)
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
+    st.markdown("""<style>
+    .dica-nav{font-size:0.72em;color:#94A3B8;text-align:center;padding:2px 0 6px;}
+    .dica-mobile{display:none;}
+    .dica-desktop{display:block;}
+    @media(max-width:768px){.dica-mobile{display:block;}.dica-desktop{display:none;}}
+    </style>
+    <div class='dica-nav dica-mobile'>👆 Deslize o dedo para navegar entre as abas</div>
+    <div class='dica-nav dica-desktop'>📋 Clique no ícone acima para abrir o menu completo</div>
+    """, unsafe_allow_html=True)
 
 # ============================================================
 # LOGIN
@@ -277,7 +286,7 @@ if st.session_state.etapa == "Login":
                 streak_p = dp.get('streak_atual', 0) if dp else 0
                 obj_p = dp.get('objetivo', '') if dp else ''
                 st.markdown('<div class="perfil-btn">', unsafe_allow_html=True)
-                if st.button(f"🍽️ {np}  ·  🔥 {streak_p} dias  ·  {obj_p}", key=f"perfil_{np}", use_container_width=True):
+                if st.button(f"🍽️ {np}", key=f"perfil_{np}", use_container_width=True):
                     if not chave_r.strip():
                         st.warning("Cole sua chave API acima.")
                     else:
@@ -323,7 +332,6 @@ if st.session_state.etapa == "Login":
 # ============================================================
 elif st.session_state.etapa == "App":
 
-    barra_salvar()
 
     # NAVBAR
     _nav_pgs = ['Home', 'Perfil', 'DiaCompleto', 'Planejamento', 'Chef', 'Compras', 'Culinarias', 'Favoritos', 'Evolucao', 'Nutricionista', 'Fitness', 'Desafios', 'Conquistas', 'FotoPrato', 'Restaurante', 'IAPreventiva', 'Historico', 'Salvos', 'Distribuicao', 'NutricaoInt']
@@ -332,6 +340,21 @@ elif st.session_state.etapa == "App":
     _nav_idx = _nav_pgs.index(st.session_state.pagina) if st.session_state.pagina in _nav_pgs else 0
     if '_menu_open' not in st.session_state: st.session_state['_menu_open'] = False
 
+    st.markdown("""<style>
+    div[data-testid="column"]:nth-child(1) .stButton>button,
+    div[data-testid="column"]:nth-child(3) .stButton>button,
+    div[data-testid="column"]:nth-child(4) .stButton>button {
+        padding: 2px 8px !important;
+        font-size: 14px !important;
+        min-height: 32px !important;
+        height: 32px !important;
+        line-height: 1 !important;
+    }
+    </style>""", unsafe_allow_html=True)
+    st.markdown("""<style>
+    .nav-menu-btn { display: block; }
+    @media (max-width: 768px) { .nav-menu-btn { display: none !important; } }
+    </style>""", unsafe_allow_html=True)
     _cl, _cc, _cr, _cm = st.columns([1, 6, 1, 1])
     with _cl:
         if st.button("‹", key="nav_prev", use_container_width=True, disabled=_nav_idx==0):
@@ -370,6 +393,37 @@ elif st.session_state.etapa == "App":
         if _d3[4].button("🧮", key="dk3_Distribuicao", help="Distribuição Calórica Inteligente", use_container_width=True): st.session_state.pagina="Distribuicao"; st.rerun()
         if _d3[5].button("🥗", key="dk3_NutricaoInt", help="Nutrição Inteligente", use_container_width=True): st.session_state.pagina="NutricaoInt"; st.rerun()
 
+    # SWIPE — detecta deslize e clica no botão correto
+    st.components.v1.html("""
+    <script>
+    (function(){
+        var tsx=0, tsy=0;
+        document.addEventListener('touchstart',function(e){
+            tsx=e.touches[0].clientX; tsy=e.touches[0].clientY;
+        },{passive:true});
+        document.addEventListener('touchend',function(e){
+            var dx=e.changedTouches[0].clientX-tsx;
+            var dy=e.changedTouches[0].clientY-tsy;
+            if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5){
+                var btns=window.parent.document.querySelectorAll('button');
+                var key=dx<0?'nav_next':'nav_prev';
+                for(var i=0;i<btns.length;i++){
+                    if(btns[i].getAttribute('data-testid')===key||
+                       btns[i].closest('[data-testid="'+key+'"]')){
+                        btns[i].click(); break;
+                    }
+                }
+                // fallback: procura pelo texto do botão
+                for(var i=0;i<btns.length;i++){
+                    var t=btns[i].innerText.trim();
+                    if(dx<0 && t==='›' && !btns[i].disabled){btns[i].click();break;}
+                    if(dx>0 && t==='‹' && !btns[i].disabled){btns[i].click();break;}
+                }
+            }
+        },{passive:true});
+    })();
+    </script>
+    """, height=0)
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
 
     # ──────────────────────────────────────────
