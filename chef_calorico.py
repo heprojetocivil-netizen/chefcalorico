@@ -332,22 +332,17 @@ elif st.session_state.etapa == "App":
     _nav_idx = _nav_pgs.index(st.session_state.pagina) if st.session_state.pagina in _nav_pgs else 0
     if '_menu_open' not in st.session_state: st.session_state['_menu_open'] = False
 
-    _col_nav, _col_menu = st.columns([6, 1])
-    with _col_nav:
-        _cor_prev = "#1A1A2E" if _nav_idx > 0 else "#D1D5DB"
-        _cor_next = "#1A1A2E" if _nav_idx < len(_nav_pgs)-1 else "#D1D5DB"
-        _nome_aba = _nav_lbs[_nav_idx]
-        _cont = f"<div style='display:flex;align-items:center;justify-content:center;gap:12px;padding:8px 0;'><span style='font-size:1.4em;color:{_cor_prev};'>‹</span><span style='font-weight:700;font-size:0.95em;color:#1A1A2E;'>{_nome_aba}</span><span style='font-size:1.4em;color:{_cor_next};'>›</span><span style='font-size:0.65em;color:#94A3B8;'>{_nav_idx+1}/{len(_nav_pgs)}</span></div>"
-        st.markdown(_cont, unsafe_allow_html=True)
-        _p1, _p2 = st.columns(2)
-        with _p1:
-            if _nav_idx > 0 and st.button("‹ anterior", key="nav_prev", use_container_width=True):
-                st.session_state.pagina = _nav_pgs[_nav_idx-1]; st.rerun()
-        with _p2:
-            if _nav_idx < len(_nav_pgs)-1 and st.button("próximo ›", key="nav_next", use_container_width=True):
-                st.session_state.pagina = _nav_pgs[_nav_idx+1]; st.rerun()
-    with _col_menu:
-        if st.button("📋", key="nav_menu", use_container_width=True, help="Menu completo"):
+    _cl, _cc, _cr, _cm = st.columns([1, 6, 1, 1])
+    with _cl:
+        if st.button("‹", key="nav_prev", use_container_width=True, disabled=_nav_idx==0):
+            st.session_state.pagina = _nav_pgs[_nav_idx-1]; st.rerun()
+    with _cc:
+        st.markdown(f"<div style='text-align:center;padding:7px 0;font-weight:700;font-size:0.95em;color:#1A1A2E;'>{_nav_lbs[_nav_idx]}<br><span style='font-size:0.65em;color:#94A3B8;'>{_nav_idx+1}/{len(_nav_pgs)}</span></div>", unsafe_allow_html=True)
+    with _cr:
+        if st.button("›", key="nav_next", use_container_width=True, disabled=_nav_idx==len(_nav_pgs)-1):
+            st.session_state.pagina = _nav_pgs[_nav_idx+1]; st.rerun()
+    with _cm:
+        if st.button("📋", key="nav_menu", use_container_width=True):
             st.session_state['_menu_open'] = not st.session_state['_menu_open']; st.rerun()
 
     if st.session_state['_menu_open']:
