@@ -325,60 +325,68 @@ elif st.session_state.etapa == "App":
 
     barra_salvar()
 
-    # NAVBAR — desktop: ícones sempre visíveis | mobile: setas
+    # NAVBAR
     _nav_pgs = ['Home', 'Perfil', 'DiaCompleto', 'Planejamento', 'Chef', 'Compras', 'Culinarias', 'Favoritos', 'Evolucao', 'Nutricionista', 'Fitness', 'Desafios', 'Conquistas', 'FotoPrato', 'Restaurante', 'IAPreventiva', 'Historico', 'Salvos', 'Distribuicao', 'NutricaoInt']
     _nav_ics = ['🏠', '📋', '🍽️', '📅', '👨\u200d🍳', '🛒', '🌍', '❤️', '📊', '💬', '🏃', '🏆', '🎖️', '📷', '🏪', '🧠', '📖', '❤️2', '🧮', '🥗']
     _nav_lbs = ['Painel Principal', 'Meu Perfil Nutricional', 'Plano do Dia', 'Planejamento 7-90 dias', 'Chef IA — Versão Saudável', 'Lista de Compras Inteligente', 'Descobrir Culinárias', 'Receitas Favoritas', 'Evolução e Progresso', 'Nutricionista IA', 'Área Fitness', 'Desafios Nutricionais', 'Minhas Conquistas', 'Analisar Foto do Prato', 'Assistente de Restaurante', 'IA Preventiva e Coach', 'Histórico de Cardápios', 'Receitas Salvas', 'Distribuição Calórica Inteligente', 'Nutrição Inteligente']
     _nav_idx = _nav_pgs.index(st.session_state.pagina) if st.session_state.pagina in _nav_pgs else 0
+    if '_menu_open' not in st.session_state: st.session_state['_menu_open'] = False
 
-    # CSS: mostra ícones no desktop, setas no mobile
+    # CSS — botões quadrados, setas quadradas
     st.markdown("""<style>
-    .nb-desktop{display:block;} .nb-mobile{display:none;}
-    @media(max-width:768px){.nb-desktop{display:none!important;} .nb-mobile{display:block;}}
+    .stButton>button {
+        border-radius: 6px !important;
+        aspect-ratio: 1 / 1;
+        font-size: 18px !important;
+        padding: 4px !important;
+    }
     </style>""", unsafe_allow_html=True)
 
-    # DESKTOP — ícones sempre visíveis
-    st.markdown("<div class='nb-desktop'>", unsafe_allow_html=True)
-    _d1 = st.columns(7)
-    if _d1[0].button("🏠", key="dk1_Home", help="Painel Principal", use_container_width=True): st.session_state.pagina="Home"; st.rerun()
-    if _d1[1].button("📋", key="dk1_Perfil", help="Meu Perfil Nutricional", use_container_width=True): st.session_state.pagina="Perfil"; st.rerun()
-    if _d1[2].button("🍽️", key="dk1_DiaCompleto", help="Plano do Dia", use_container_width=True): st.session_state.pagina="DiaCompleto"; st.rerun()
-    if _d1[3].button("📅", key="dk1_Planejamento", help="Planejamento 7-90 dias", use_container_width=True): st.session_state.pagina="Planejamento"; st.rerun()
-    if _d1[4].button("👨‍🍳", key="dk1_Chef", help="Chef IA — Versão Saudável", use_container_width=True): st.session_state.pagina="Chef"; st.rerun()
-    if _d1[5].button("🛒", key="dk1_Compras", help="Lista de Compras Inteligente", use_container_width=True): st.session_state.pagina="Compras"; st.rerun()
-    if _d1[6].button("🌍", key="dk1_Culinarias", help="Descobrir Culinárias", use_container_width=True): st.session_state.pagina="Culinarias"; st.rerun()
-    _d2 = st.columns(7)
-    if _d2[0].button("❤️", key="dk2_Favoritos", help="Receitas Favoritas", use_container_width=True): st.session_state.pagina="Favoritos"; st.rerun()
-    if _d2[1].button("📊", key="dk2_Evolucao", help="Evolução e Progresso", use_container_width=True): st.session_state.pagina="Evolucao"; st.rerun()
-    if _d2[2].button("💬", key="dk2_Nutricionista", help="Nutricionista IA", use_container_width=True): st.session_state.pagina="Nutricionista"; st.rerun()
-    if _d2[3].button("🏃", key="dk2_Fitness", help="Área Fitness", use_container_width=True): st.session_state.pagina="Fitness"; st.rerun()
-    if _d2[4].button("🏆", key="dk2_Desafios", help="Desafios Nutricionais", use_container_width=True): st.session_state.pagina="Desafios"; st.rerun()
-    if _d2[5].button("🎖️", key="dk2_Conquistas", help="Minhas Conquistas", use_container_width=True): st.session_state.pagina="Conquistas"; st.rerun()
-    if _d2[6].button("📷", key="dk2_FotoPrato", help="Analisar Foto do Prato", use_container_width=True): st.session_state.pagina="FotoPrato"; st.rerun()
-    _d3 = st.columns(6)
-    if _d3[0].button("🏪", key="dk3_Restaurante", help="Assistente de Restaurante", use_container_width=True): st.session_state.pagina="Restaurante"; st.rerun()
-    if _d3[1].button("🧠", key="dk3_IAPreventiva", help="IA Preventiva e Coach", use_container_width=True): st.session_state.pagina="IAPreventiva"; st.rerun()
-    if _d3[2].button("📖", key="dk3_Historico", help="Histórico de Cardápios", use_container_width=True): st.session_state.pagina="Historico"; st.rerun()
-    if _d3[3].button("❤️2", key="dk3_Salvos", help="Receitas Salvas", use_container_width=True): st.session_state.pagina="Salvos"; st.rerun()
-    if _d3[4].button("🧮", key="dk3_Distribuicao", help="Distribuição Calórica Inteligente", use_container_width=True): st.session_state.pagina="Distribuicao"; st.rerun()
-    if _d3[5].button("🥗", key="dk3_NutricaoInt", help="Nutrição Inteligente", use_container_width=True): st.session_state.pagina="NutricaoInt"; st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    # MOBILE — setas
-    st.markdown("<div class='nb-mobile'>", unsafe_allow_html=True)
-    _sl, _sc, _sr = st.columns([1,4,1])
-    with _sl:
+    # Linha: ◀  Nome da Aba  ▶  📋
+    _cl, _cc, _cr, _cm = st.columns([1, 5, 1, 1])
+    with _cl:
         if st.button("◀", key="nav_prev", use_container_width=True, disabled=_nav_idx==0):
-            st.session_state.pagina=_nav_pgs[_nav_idx-1]; st.rerun()
-    with _sc:
-        st.markdown(f"<div style='text-align:center;padding:8px 0;font-weight:700;'>"
+            st.session_state.pagina = _nav_pgs[_nav_idx-1]; st.rerun()
+    with _cc:
+        st.markdown(
+            f"<div style='text-align:center;padding:7px 0;font-weight:700;font-size:0.95em;color:#1A1A2E;'>"
             f"{_nav_ics[_nav_idx]} {_nav_lbs[_nav_idx]}"
-            f"<br><span style='font-size:0.7em;color:#94A3B8;'>{_nav_idx+1}/{len(_nav_pgs)}</span></div>",
+            f"<br><span style='font-size:0.68em;color:#94A3B8;'>{_nav_idx+1} / {len(_nav_pgs)}</span></div>",
             unsafe_allow_html=True)
-    with _sr:
+    with _cr:
         if st.button("▶", key="nav_next", use_container_width=True, disabled=_nav_idx==len(_nav_pgs)-1):
-            st.session_state.pagina=_nav_pgs[_nav_idx+1]; st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+            st.session_state.pagina = _nav_pgs[_nav_idx+1]; st.rerun()
+    with _cm:
+        _lbl_menu = "✖" if st.session_state['_menu_open'] else "📋"
+        if st.button(_lbl_menu, key="nav_menu", use_container_width=True, help="Abrir/fechar menu"):
+            st.session_state['_menu_open'] = not st.session_state['_menu_open']; st.rerun()
+
+    # Grade de ícones — só aparece quando menu aberto
+    if st.session_state['_menu_open']:
+        _d1 = st.columns(7)
+        if _d1[0].button("🏠", key="dk1_Home", help="Painel Principal", use_container_width=True): st.session_state.pagina="Home"; st.rerun()
+        if _d1[1].button("📋", key="dk1_Perfil", help="Meu Perfil Nutricional", use_container_width=True): st.session_state.pagina="Perfil"; st.rerun()
+        if _d1[2].button("🍽️", key="dk1_DiaCompleto", help="Plano do Dia", use_container_width=True): st.session_state.pagina="DiaCompleto"; st.rerun()
+        if _d1[3].button("📅", key="dk1_Planejamento", help="Planejamento 7-90 dias", use_container_width=True): st.session_state.pagina="Planejamento"; st.rerun()
+        if _d1[4].button("👨‍🍳", key="dk1_Chef", help="Chef IA — Versão Saudável", use_container_width=True): st.session_state.pagina="Chef"; st.rerun()
+        if _d1[5].button("🛒", key="dk1_Compras", help="Lista de Compras Inteligente", use_container_width=True): st.session_state.pagina="Compras"; st.rerun()
+        if _d1[6].button("🌍", key="dk1_Culinarias", help="Descobrir Culinárias", use_container_width=True): st.session_state.pagina="Culinarias"; st.rerun()
+        _d2 = st.columns(7)
+        if _d2[0].button("❤️", key="dk2_Favoritos", help="Receitas Favoritas", use_container_width=True): st.session_state.pagina="Favoritos"; st.rerun()
+        if _d2[1].button("📊", key="dk2_Evolucao", help="Evolução e Progresso", use_container_width=True): st.session_state.pagina="Evolucao"; st.rerun()
+        if _d2[2].button("💬", key="dk2_Nutricionista", help="Nutricionista IA", use_container_width=True): st.session_state.pagina="Nutricionista"; st.rerun()
+        if _d2[3].button("🏃", key="dk2_Fitness", help="Área Fitness", use_container_width=True): st.session_state.pagina="Fitness"; st.rerun()
+        if _d2[4].button("🏆", key="dk2_Desafios", help="Desafios Nutricionais", use_container_width=True): st.session_state.pagina="Desafios"; st.rerun()
+        if _d2[5].button("🎖️", key="dk2_Conquistas", help="Minhas Conquistas", use_container_width=True): st.session_state.pagina="Conquistas"; st.rerun()
+        if _d2[6].button("📷", key="dk2_FotoPrato", help="Analisar Foto do Prato", use_container_width=True): st.session_state.pagina="FotoPrato"; st.rerun()
+        _d3 = st.columns(6)
+        if _d3[0].button("🏪", key="dk3_Restaurante", help="Assistente de Restaurante", use_container_width=True): st.session_state.pagina="Restaurante"; st.rerun()
+        if _d3[1].button("🧠", key="dk3_IAPreventiva", help="IA Preventiva e Coach", use_container_width=True): st.session_state.pagina="IAPreventiva"; st.rerun()
+        if _d3[2].button("📖", key="dk3_Historico", help="Histórico de Cardápios", use_container_width=True): st.session_state.pagina="Historico"; st.rerun()
+        if _d3[3].button("❤️2", key="dk3_Salvos", help="Receitas Salvas", use_container_width=True): st.session_state.pagina="Salvos"; st.rerun()
+        if _d3[4].button("🧮", key="dk3_Distribuicao", help="Distribuição Calórica Inteligente", use_container_width=True): st.session_state.pagina="Distribuicao"; st.rerun()
+        if _d3[5].button("🥗", key="dk3_NutricaoInt", help="Nutrição Inteligente", use_container_width=True): st.session_state.pagina="NutricaoInt"; st.rerun()
+
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
 
     # ──────────────────────────────────────────
