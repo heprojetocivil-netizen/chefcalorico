@@ -332,36 +332,38 @@ elif st.session_state.etapa == "App":
     _nav_idx = _nav_pgs.index(st.session_state.pagina) if st.session_state.pagina in _nav_pgs else 0
     if '_menu_open' not in st.session_state: st.session_state['_menu_open'] = False
 
-    # CSS — botões quadrados, setas quadradas
+    # CSS — força linha horizontal e botões quadrados
     st.markdown("""<style>
+    div[data-testid="stHorizontalBlock"] {
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+    }
     .stButton>button {
         border-radius: 6px !important;
-        aspect-ratio: 1 / 1;
         font-size: 18px !important;
         padding: 4px !important;
+        min-height: 38px !important;
     }
     </style>""", unsafe_allow_html=True)
 
-    # Linha: ◀  Nome da Aba  ▶  📋
+    # Barra de navegação — sempre horizontal
     _cl, _cc, _cr, _cm = st.columns([1, 5, 1, 1])
     with _cl:
-        if st.button("◀", key="nav_prev", use_container_width=True, disabled=_nav_idx==0):
+        if st.button("‹", key="nav_prev", use_container_width=True, disabled=_nav_idx==0):
             st.session_state.pagina = _nav_pgs[_nav_idx-1]; st.rerun()
     with _cc:
         st.markdown(
-            f"<div style='text-align:center;padding:7px 0;font-weight:700;font-size:0.95em;color:#1A1A2E;'>"
+            f"<div style='text-align:center;padding:6px 0;font-weight:700;font-size:0.92em;color:#1A1A2E;line-height:1.3;'>"
             f"{_nav_ics[_nav_idx]} {_nav_lbs[_nav_idx]}"
             f"<br><span style='font-size:0.68em;color:#94A3B8;'>{_nav_idx+1} / {len(_nav_pgs)}</span></div>",
             unsafe_allow_html=True)
     with _cr:
-        if st.button("▶", key="nav_next", use_container_width=True, disabled=_nav_idx==len(_nav_pgs)-1):
+        if st.button("›", key="nav_next", use_container_width=True, disabled=_nav_idx==len(_nav_pgs)-1):
             st.session_state.pagina = _nav_pgs[_nav_idx+1]; st.rerun()
     with _cm:
-        _lbl_menu = "✖" if st.session_state['_menu_open'] else "📋"
-        if st.button(_lbl_menu, key="nav_menu", use_container_width=True, help="Abrir/fechar menu"):
+        if st.button("✖" if st.session_state['_menu_open'] else "📋", key="nav_menu", use_container_width=True):
             st.session_state['_menu_open'] = not st.session_state['_menu_open']; st.rerun()
 
-    # Grade de ícones — só aparece quando menu aberto
     if st.session_state['_menu_open']:
         _d1 = st.columns(7)
         if _d1[0].button("🏠", key="dk1_Home", help="Painel Principal", use_container_width=True): st.session_state.pagina="Home"; st.rerun()
